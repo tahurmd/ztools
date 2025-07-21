@@ -10,7 +10,7 @@ function loadAllLinks() {
         
         {
             title: 'SGB Intrest Calender',
-            description: 'SGB Intrest Calender friom Tradingqna',
+            description: 'SGB Intrest Calender from Tradingqna',
             icon: 'bi-newspaper',
             color: 'info',
             type: 'external',
@@ -34,12 +34,12 @@ function loadAllLinks() {
         },
      
         {
-            title: 'Economic Times',
-            description: 'Business news and updates',
-            icon: 'bi-journal-text',
+            title: 'Zerodha Varsity Live',
+            description: 'Zerodha Varsity Live',
+            icon: 'bi-journal-textt',
             color: 'warning',
             type: 'external',
-            url: 'https://economictimes.indiatimes.com/'
+            url: 'https://zerodha.com/varsity/live'
         },
         {
             title: 'RBI India',
@@ -59,11 +59,11 @@ function loadAllLinks() {
         },
         {
             title: 'CVLKRA',
-            description: 'Investment platform',
+            description: 'kyc Verification',
             icon: 'bi-arrow-up-circle',
             color: 'success',
             type: 'external',
-            url: 'https://groww.in/'
+            url: 'https://www.cvlkra.com/'
         }
     ];
     
