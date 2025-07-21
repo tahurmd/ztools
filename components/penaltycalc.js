@@ -195,7 +195,7 @@ function loadSampleMarginData() {
     calculatePenalty();
 }
 document.addEventListener('keydown', function(e) {
-    if (document.getElementById('reports-section').style.display === 'none') return;
+    if (document.getElementById('penaltycalc-section').style.display === 'none') return;
     if (e.ctrlKey && e.key === 'l') {
         e.preventDefault();
         loadSampleMarginData();

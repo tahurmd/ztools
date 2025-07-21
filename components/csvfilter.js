@@ -282,7 +282,7 @@ document.addEventListener('keydown', function(e) {
     // Ctrl+R to reset analytics
     if (e.ctrlKey && e.key === 'r') {
         e.preventDefault();
-        if (document.getElementById('analytics-section').style.display !== 'none') {
+        if (document.getElementById('csvfilter-section').style.display !== 'none') {
             resetAnalytics();
         }
     }
@@ -290,7 +290,7 @@ document.addEventListener('keydown', function(e) {
     // Ctrl+E to export (when results are visible)
     if (e.ctrlKey && e.key === 'e') {
         e.preventDefault();
-        if (document.getElementById('resultsSection').style.display !== 'none') {
+        if (document.getElementById('csvfilter-section').style.display !== 'none') {
             exportResults();
         }
     }

@@ -192,7 +192,7 @@ function resetCalculator() {
 // Add keyboard shortcuts for calculator
 document.addEventListener('keydown', function(e) {
     // Only work when users section is visible
-    if (document.getElementById('users-section').style.display === 'none') return;
+    if (document.getElementById('buyavgc-section').style.display === 'none') return;
     
     // Ctrl+N to add new trade
     if (e.ctrlKey && e.key === 'n') {

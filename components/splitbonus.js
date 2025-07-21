@@ -222,7 +222,7 @@ function loadSampleSplitData() {
 // Add keyboard shortcuts for split calculator
 document.addEventListener('keydown', function(e) {
     // Only work when products section is visible
-    if (document.getElementById('products-section').style.display === 'none') return;
+    if (document.getElementById('splitbonus-section').style.display === 'none') return;
     
     // Ctrl+L to load sample data
     if (e.ctrlKey && e.key === 'l') {
