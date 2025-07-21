@@ -36,7 +36,7 @@ function loadAllLinks() {
         {
             title: 'Zerodha Varsity Live',
             description: 'Zerodha Varsity Live',
-            icon: 'bi-journal-textt',
+            icon: 'bi-journal-text',
             color: 'warning',
             type: 'external',
             url: 'https://zerodha.com/varsity/live'
