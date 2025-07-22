@@ -11,8 +11,8 @@ function handleIFSCInput() {
     // Clear previous timeout
     clearTimeout(validationTimeout);
     
-    // Hide all sections
-    hideAllSections();
+    // ALWAYS clear everything when user types
+    completelyResetAll();
     
     if (value.length === 0) {
         updateValidationStatus('Enter IFSC code to validate', 'muted');
@@ -180,7 +180,7 @@ function findPotentialMistakes(ifsc) {
     return mistakes;
 }
 
-// Validate IFSC code via API
+// Validate IFSC code via API - COMPLETELY FIXED
 async function validateIFSC() {
     const ifscInput = document.getElementById('ifscInput');
     const ifscCode = ifscInput.value.trim().toUpperCase();
@@ -195,7 +195,10 @@ async function validateIFSC() {
         return;
     }
     
-    hideAllSections();
+    // STEP 1: Completely reset everything before starting
+    completelyResetAll();
+    
+    // STEP 2: Show loading
     document.getElementById('loadingSection').style.display = 'block';
     updateValidationStatus('Validating...', 'muted');
     
@@ -203,6 +206,9 @@ async function validateIFSC() {
         const response = await fetch(`https://ifsc.razorpay.com/${ifscCode}`);
         
         if (response.ok) {
+            // STEP 3: Success - Complete reset and show bank details
+            completelyResetAll();
+            
             ifscData = await response.json();
             displayBankDetails(ifscData);
             updateValidationStatus('✓ IFSC code validated successfully!', 'success');
@@ -212,6 +218,9 @@ async function validateIFSC() {
             throw new Error(`Server error: ${response.status}`);
         }
     } catch (error) {
+        // STEP 4: Error - Complete reset and show error
+        completelyResetAll();
+        
         console.error('IFSC validation error:', error);
         let errorMessage = 'The IFSC code is not valid or doesn\'t exist in our database.';
         
@@ -234,7 +243,7 @@ async function validateIFSC() {
     }
 }
 
-// Display bank details
+// Display bank details - NO PREVIOUS CLEARING NEEDED (already done)
 function displayBankDetails(data) {
     // Update summary cards
     document.getElementById('bankName').textContent = data.BANK || 'N/A';
@@ -258,13 +267,16 @@ function displayBankDetails(data) {
     updateServiceIndicator('impsService', data.IMPS);
     updateServiceIndicator('upiService', data.UPI);
     
+    // Show ONLY the bank details section
     document.getElementById('bankDetailsSection').style.display = 'block';
 }
 
 // Update service indicator
 function updateServiceIndicator(elementId, isAvailable) {
     const element = document.getElementById(elementId);
-    const serviceName = element.querySelector('.fw-bold').textContent;
+    if (!element) return;
+    
+    const serviceName = element.querySelector('.fw-bold')?.textContent || elementId;
     
     if (isAvailable) {
         element.className = 'service-indicator text-success';
@@ -285,29 +297,105 @@ function updateServiceIndicator(elementId, isAvailable) {
 
 // Show error message
 function showError(message) {
-    document.getElementById('errorMessage').textContent = message;
-    document.getElementById('errorSection').style.display = 'block';
+    const errorMessageElement = document.getElementById('errorMessage');
+    if (errorMessageElement) {
+        errorMessageElement.textContent = message;
+    }
+    const errorSection = document.getElementById('errorSection');
+    if (errorSection) {
+        errorSection.style.display = 'block';
+    }
 }
 
-// Hide all sections
-function hideAllSections() {
-    document.getElementById('suggestionsSection').style.display = 'none';
-    document.getElementById('loadingSection').style.display = 'none';
-    document.getElementById('bankDetailsSection').style.display = 'none';
-    document.getElementById('errorSection').style.display = 'none';
-}
-
-// Clear IFSC form
-function clearIFSCForm() {
-    document.getElementById('ifscInput').value = '';
+// NEW FUNCTION: Complete reset of everything
+function completelyResetAll() {
+    // Hide all sections
+    const sections = [
+        'suggestionsSection',
+        'loadingSection', 
+        'bankDetailsSection',
+        'errorSection'
+    ];
+    
+    sections.forEach(sectionId => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            element.style.display = 'none';
+        }
+    });
+    
+    // Clear all content completely
+    const suggestionsList = document.getElementById('suggestionsList');
+    if (suggestionsList) {
+        suggestionsList.innerHTML = '';
+    }
+    
+    const errorMessage = document.getElementById('errorMessage');
+    if (errorMessage) {
+        errorMessage.textContent = '';
+        errorMessage.innerHTML = '';
+    }
+    
+    // Clear bank details content (THIS WAS MISSING!)
+    const bankDetailsSection = document.getElementById('bankDetailsSection');
+    if (bankDetailsSection) {
+        // Clear all bank detail fields
+        const bankDetailFields = [
+            'bankName', 'branchName', 'cityName', 'stateName',
+            'ifscCode', 'bankCode', 'micrCode', 'swiftCode',
+            'addressDetails', 'districtName', 'centreName', 'contactInfo'
+        ];
+        
+        bankDetailFields.forEach(fieldId => {
+            const element = document.getElementById(fieldId);
+            if (element) {
+                element.textContent = '';
+            }
+        });
+        
+        // Clear service indicators
+        const serviceFields = ['rtgsService', 'neftService', 'impsService', 'upiService'];
+        serviceFields.forEach(fieldId => {
+            const element = document.getElementById(fieldId);
+            if (element) {
+                element.innerHTML = '';
+                element.className = 'service-indicator';
+            }
+        });
+    }
+    
+    // Reset data
     ifscData = null;
-    hideAllSections();
+}
+
+// Clear IFSC form - Use the complete reset
+function clearIFSCForm() {
+    const input = document.getElementById('ifscInput');
+    if (input) {
+        input.value = '';
+    }
+    
+    completelyResetAll();
     updateValidationStatus('Enter IFSC code to validate', 'muted');
 }
 
+// Initialize IFSC validator
+function ifscValidatorInit() {
+    console.log('IFSC Validator initialized');
+    clearIFSCForm();
+}
+
+// Make functions globally available
+window.handleIFSCInput = handleIFSCInput;
+window.validateIFSC = validateIFSC;
+window.clearIFSCForm = clearIFSCForm;
+window.ifscValidatorInit = ifscValidatorInit;
+
 // Add Enter key support
 document.addEventListener('keydown', function(e) {
-    if (document.getElementById('orders-section').style.display !== 'none' && e.key === 'Enter') {
+    if (document.getElementById('ifsc-section') && 
+        document.getElementById('ifsc-section').style.display !== 'none' && 
+        e.key === 'Enter') {
         const ifscInput = document.getElementById('ifscInput');
         if (document.activeElement === ifscInput) {
             e.preventDefault();
