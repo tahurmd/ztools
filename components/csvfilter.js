@@ -77,7 +77,7 @@ function isISIN(val) {
 function trimPostfix(val) {
     if (isISIN(val)) return val;
     if (typeof val !== 'string') return val;
-    return val.replace(/-(BE|BZ|RE)$/i, '');
+    return val.replace(/-(BE|BZ|RE|ST|SM|EQ|M|T|Z|X|XT)$/i, '');
 }
 
 function generateUniqueValues() {
