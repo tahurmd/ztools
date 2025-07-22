@@ -438,7 +438,7 @@ function populateDropdown(dropdownId, headers) {
 // Utility: trim -BE, -BZ, -RE (case-insensitive) postfixes
 function trimPostfix(val) {
     if (typeof val !== 'string') return val;
-    return val.replace(/-(BE|BZ|RE)$/i, '');
+    return val.replace(/-(BE|BZ|RE|ST|SM|EQ|M|T|Z|X|XT)$/i, '');
 }
 
 // Generate unique values and show results, with or without postfix filtering
