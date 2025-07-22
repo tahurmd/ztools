@@ -3,8 +3,10 @@ let csvData1 = [];
 let csvData2 = [];
 let headers1 = [];
 let headers2 = [];
+let csvFile1Name = "File 1";
+let csvFile2Name = "File 2";
 
-// Papa Parse upload handler
+// Papa Parse file upload handler
 function handleFileUpload(fileNumber) {
     const fileInput = document.getElementById(`csvFile${fileNumber}`);
     const statusDiv = document.getElementById(`file${fileNumber}Status`);
@@ -30,11 +32,13 @@ function handleFileUpload(fileNumber) {
                 if (fileNumber === 1) {
                     csvData1 = data;
                     headers1 = headers;
+                    csvFile1Name = file.name;
                     populateDropdown('column1Dropdown', headers1);
                     statusDiv.innerHTML = `<span class="text-success"><i class="bi bi-check-circle me-1"></i>${file.name} uploaded successfully (${data.length} rows, ${headers.length} columns)</span>`;
                 } else {
                     csvData2 = data;
                     headers2 = headers;
+                    csvFile2Name = file.name;
                     populateDropdown('column2Dropdown', headers2);
                     statusDiv.innerHTML = `<span class="text-success"><i class="bi bi-check-circle me-1"></i>${file.name} uploaded successfully (${data.length} rows, ${headers.length} columns)</span>`;
                 }
@@ -48,6 +52,11 @@ function handleFileUpload(fileNumber) {
     } else {
         statusDiv.innerHTML = `<span class="text-danger"><i class="bi bi-x-circle me-1"></i>Please select a valid CSV file</span>`;
     }
+}
+
+function getShortFileName(name, maxLen = 15) {
+    if (!name) return "";
+    return name.length > maxLen ? name.substring(0, maxLen - 3) + "..." : name;
 }
 
 function showOptionsWhenBothUploaded() {
@@ -112,9 +121,9 @@ function generateUniqueValues() {
             const uniqueToCSV2 = new Set([...values2].filter(x => !values1.has(x)));
             showPostfixFilterBadge(ignorePostfix);
 
-            displayUniqueValues(Array.from(uniqueToCSV1), Array.from(uniqueToCSV2));
-            document.getElementById('file1ColumnName').textContent = column1Name;
-            document.getElementById('file2ColumnName').textContent = column2Name;
+            displayUniqueValues(Array.from(uniqueToCSV1), Array.from(uniqueToCSV2), column1Name, column2Name);
+            // Update column file name+col headers
+            updateResultTableHeaders(column1Name, column2Name);
             calculateComparisonStats(values1, values2);
 
         }, 100);
@@ -138,7 +147,27 @@ function showPostfixFilterBadge(isActive) {
     }
 }
 
-// This version skips ISIN values in result tables if enabled
+// Update result table headers with file name and column name
+function updateResultTableHeaders(column1Name, column2Name) {
+    const file1Header = document.getElementById('file1ResultHeader');
+    const file2Header = document.getElementById('file2ResultHeader');
+    if (file1Header) {
+        file1Header.innerHTML = `
+            <i class="bi bi-exclamation-triangle me-1"></i>
+            Only in: <span class="fw-bold">${escapeHtml(getShortFileName(csvFile1Name))}</span>
+            <span class="text-muted">(${escapeHtml(column1Name)})</span>
+        `;
+    }
+    if (file2Header) {
+        file2Header.innerHTML = `
+            <i class="bi bi-info-circle me-1"></i>
+            Only in: <span class="fw-bold">${escapeHtml(getShortFileName(csvFile2Name))}</span>
+            <span class="text-muted">(${escapeHtml(column2Name)})</span>
+        `;
+    }
+}
+
+// Show unique values, applying ISIN filter if needed
 function displayUniqueValues(uniqueValues1, uniqueValues2) {
     const tbody1 = document.getElementById('uniqueValues1');
     const tbody2 = document.getElementById('uniqueValues2');
@@ -183,7 +212,6 @@ function displayUniqueValues(uniqueValues1, uniqueValues2) {
             <i class="bi bi-info-circle me-1"></i>No unique values found
             </td></tr>`;
     }
-
     document.getElementById('count1').textContent = count1;
     document.getElementById('count2').textContent = count2;
 }
@@ -254,7 +282,6 @@ function exportResults() {
     window.URL.revokeObjectURL(url);
 }
 
-// Escape HTML
 function escapeHtml(unsafe) {
     return unsafe
          .replace(/&/g, "&amp;")
@@ -269,6 +296,8 @@ function resetAnalytics() {
     csvData2 = [];
     headers1 = [];
     headers2 = [];
+    csvFile1Name = "File 1";
+    csvFile2Name = "File 2";
     document.getElementById('csvFile1').value = '';
     document.getElementById('csvFile2').value = '';
     document.getElementById('file1Status').textContent = 'No file selected';
@@ -281,6 +310,11 @@ function resetAnalytics() {
     if (badge) badge.remove();
     document.getElementById('column1Dropdown').innerHTML = '<option value="">Select a column...</option>';
     document.getElementById('column2Dropdown').innerHTML = '<option value="">Select a column...</option>';
+    // Also clear table headers if present
+    let file1Header = document.getElementById('file1ResultHeader');
+    let file2Header = document.getElementById('file2ResultHeader');
+    if (file1Header) { file1Header.textContent = "Only in File 1"; }
+    if (file2Header) { file2Header.textContent = "Only in File 2"; }
 }
 
 // Drag and drop
