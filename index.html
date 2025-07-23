@@ -66,6 +66,18 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="#" data-section="splitbonuspro">
+                    <i class="bi bi-bar-chart-steps"></i>
+                    <span>Split & Bonus <span class="badge bg-primary">pro</span></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-section="ledgerrecon">
+                    <i class="bi bi-file-earmark-ruled"></i>
+                    <span>Ledger Recon</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="#" data-section="about">
                     <i class="bi bi-person-fill"></i>
                     <span>About</span>
@@ -1085,6 +1097,129 @@
                 </div>
             </div>
         </section>
+
+
+        <!-- Split & Bonus Pro Section -->
+        <section id="splitbonuspro-section" class="content-section" style="display: none;">
+            <h2 class="mb-4">
+                <i class="bi bi-bar-chart-steps me-2"></i>Split & Bonus Pro
+                <button class="btn btn-outline-secondary btn-sm ms-3" onclick="resetSplitBonusPro()">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Reset
+                </button>
+                
+            </h2>
+           
+        
+            <!-- Action Buttons -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-plus-square me-2"></i>Add Transaction
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 mb-2">
+                                    <button class="btn btn-primary w-100" onclick="addTransaction('BUY')">
+                                        <i class="bi bi-cart-plus me-1"></i>Add Buy
+                                    </button>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <button class="btn btn-danger w-100" onclick="addTransaction('SELL')">
+                                        <i class="bi bi-cart-dash me-1"></i>Add Sell
+                                    </button>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <button class="btn btn-secondary w-100" onclick="addTransaction('SPLIT')">
+                                        <i class="bi bi-scissors me-1"></i>Add Split
+                                    </button>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <button class="btn btn-success w-100" onclick="addTransaction('BONUS')">
+                                        <i class="bi bi-gift me-1"></i>Add Bonus
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Status Panel -->
+            <div class="row mb-4" id="statusPanel">
+                <!-- Status cards will be populated here -->
+            </div>
+        
+            <!-- Transactions Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-table me-2"></i>Transaction History
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="10%">Type</th>
+                                    <th width="15%">Quantity/Ratio</th>
+                                    <th width="12%">Price</th>
+                                    <th width="12%">Holdings</th>
+                                    <th width="12%">Avg Price</th>
+                                    <th width="20%">Details</th>
+                                    <th width="14%">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTable">
+                                <!-- Transactions will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Summary Section -->
+            <div class="row mt-4" id="summarySection" style="display: none;">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">
+                                <i class="bi bi-graph-up me-2"></i>Portfolio Summary
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-primary">Investment Summary:</h6>
+                                    <div id="investmentSummary">
+                                        <!-- Investment details will be shown here -->
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-success">Corporate Actions Impact:</h6>
+                                    <div id="corporateActionsSummary">
+                                        <!-- Corporate actions summary will be shown here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </section>
+        
+
+        <!-- Ledger Recon Section -->
+        <section id="ledgerrecon-section" class="content-section" style="display: none;">
+            <div class="alert alert-primary"> </div>
+        </section>
+        
+
         <!-- About Section -->
         <section id="about-section" class="content-section" style="display: none;">
             <h2 class="mb-4">
@@ -1099,7 +1234,7 @@
                         <li>Edge cases? Haven’t tested much. If you break it or get a wrong result, please accept my heartfelt ¯\_(ツ)_/¯ .</li>
                         <li>Most major code chunks were <i>generated by Claude and Cursor</i> , so if something pops, blame the bots &#129302;!</li>
                         <li>CSV parsing is all thanks to <a href="https://www.papaparse.com/" target="_blank">Papa Parse</a>, and data never passed to any server.</li>
-                        <li>The entire project is mostly hand-rolled in good old "vanilla JS" .</li>
+                        
                     </ul>
                     <hr>
                     <div>
@@ -1127,6 +1262,8 @@
     <script src="components/ifscvalidator.js"></script>
     <script src="components/penaltycalc.js"></script>
     <script src="components/buyavgcalc.js"></script> 
+    <script src="components/splitbonuspro.js"></script>
+    <script src="components/ledgerrecon.js"></script>
     <script src="main.js"></script>
     <script src="script.js"></script>
 
