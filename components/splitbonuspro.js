@@ -1,308 +1,396 @@
-// Ledger Recon Variables
-let ledgerData = [];
+// Split & Bonus Pro Calculator Variables
+let transactions = [];
 
-// Handle ledger file upload
-function handleLedgerUpload() {
-    const fileInput = document.getElementById('ledgerFile');
-    const statusDiv = document.getElementById('ledgerUploadStatus');
-    const file = fileInput.files[0];
+// Add new transaction - FIXED to add only one entry
+function addTransaction(type) {
+    if (type === 'BUY') {
+        transactions.push({type: 'BUY', qty: '', price: ''});
+    } else if (type === 'SELL') {
+        transactions.push({type: 'SELL', qty: '', price: ''});
+    } else if (type === 'SPLIT') {
+        transactions.push({type: 'SPLIT', ratioNew: 2, ratioOld: 1});
+    } else if (type === 'BONUS') {
+        transactions.push({type: 'BONUS', ratioFree: 1, ratioHeld: 4});
+    }
+    renderTransactions();
+}
 
-    if (file && (file.type === 'text/csv' || file.name.endsWith('.csv'))) {
-        statusDiv.innerHTML = `<span class="text-info"><i class="bi bi-hourglass-split me-1"></i>Processing ${file.name}...</span>`;
-        
-        Papa.parse(file, {
-            header: true,
-            skipEmptyLines: true,
-            trimHeaders: true,
-            complete: function(results) {
-                console.log('Raw CSV data:', results.data); // Debug log
-                
-                if (results.errors.length > 0) {
-                    console.warn('CSV parsing warnings:', results.errors);
-                }
-                
-                // Filter out opening/closing balance entries
-                ledgerData = results.data.filter(row => {
-                    const particulars = row.particulars?.trim() || '';
-                    return particulars !== '' && 
-                           particulars !== 'Opening Balance' && 
-                           particulars !== 'Closing Balance';
-                });
-                
-                console.log('Filtered ledger data:', ledgerData); // Debug log
-                
-                statusDiv.innerHTML = `<span class="text-success"><i class="bi bi-check-circle me-1"></i>${file.name} processed successfully (${ledgerData.length} transactions)</span>`;
-                
-                // Call the analysis function
-                analyzeLedgerData();
-            },
-            error: function(error) {
-                statusDiv.innerHTML = `<span class="text-danger"><i class="bi bi-x-circle me-1"></i>Error: ${error.message}</span>`;
-                console.error('Papa Parse Error:', error);
+// Remove transaction
+function removeTransaction(idx) {
+    transactions.splice(idx, 1);
+    renderTransactions();
+}
+
+// Update transaction field
+function updateTransactionField(idx, field, value) {
+    if (['qty', 'price', 'ratioNew', 'ratioOld', 'ratioFree', 'ratioHeld'].includes(field)) {
+        transactions[idx][field] = Number(value) || '';
+        renderTransactions();
+    }
+}
+
+// Main render function
+function renderTransactions() {
+    let qty = 0, invested = 0, avg = 0;
+    let totalBuy = 0, totalSell = 0, totalSplits = 0, totalBonus = 0;
+    const rows = [];
+
+    transactions.forEach((transaction, idx) => {
+        let details = '';
+        let qtyChange = 0;
+
+        if (transaction.type === 'BUY') {
+            if (transaction.qty && transaction.price) {
+                invested += transaction.qty * transaction.price;
+                qty += transaction.qty;
+                totalBuy += transaction.qty;
+                qtyChange = `+${transaction.qty}`;
+                details = `Buy ${transaction.qty} shares @ ₹${transaction.price.toFixed(2)}`;
+            } else {
+                qtyChange = '+0';
+                details = 'Buy transaction (enter qty & price)';
             }
+        } 
+        else if (transaction.type === 'SELL') {
+            if (transaction.qty && qty > 0) {
+                const sellQty = Math.min(transaction.qty, qty);
+                invested -= sellQty * avg;
+                qty -= sellQty;
+                totalSell += sellQty;
+                qtyChange = `-${sellQty}`;
+                details = `Sell ${transaction.qty} shares @ ₹${transaction.price.toFixed(2)}`;
+            } else {
+                qtyChange = '-0';
+                details = 'Sell transaction (enter qty & price)';
+            }
+        } 
+        else if (transaction.type === 'SPLIT') {
+            if (transaction.ratioNew && transaction.ratioOld && qty > 0) {
+                const multiplier = transaction.ratioNew / transaction.ratioOld;
+                qty = Math.floor(qty * multiplier);
+                totalSplits++;
+                qtyChange = `×${transaction.ratioNew}:${transaction.ratioOld}`;
+                details = `Stock split ${transaction.ratioNew}:${transaction.ratioOld} (multiplier: ${multiplier.toFixed(2)}x)`;
+            } else {
+                qtyChange = '×0';
+                details = `Stock split ${transaction.ratioNew}:${transaction.ratioOld}`;
+            }
+        } 
+        else if (transaction.type === 'BONUS') {
+            if (transaction.ratioFree && transaction.ratioHeld && qty > 0) {
+                // Bonus shares are added at ZERO price
+                const bonusShares = Math.floor(qty * (transaction.ratioFree / transaction.ratioHeld));
+                qty += bonusShares;
+                totalBonus += bonusShares;
+                qtyChange = `+${bonusShares}`;
+                details = `Bonus ${transaction.ratioFree}:${transaction.ratioHeld} (received ${bonusShares} shares at ₹0)`;
+                // invested amount remains unchanged for bonus shares
+            } else {
+                qtyChange = '+0';
+                details = `Bonus ${transaction.ratioFree}:${transaction.ratioHeld}`;
+            }
+        }
+
+        avg = qty > 0 ? invested / qty : 0;
+
+        rows.push({
+            idx: idx + 1,
+            type: transaction.type,
+            transaction: transaction,
+            qty: qty,
+            avg: avg,
+            invested: invested,
+            details: details,
+            qtyChange: qtyChange
         });
+    });
+
+    // Render table
+    renderTable(rows);
+    
+    // Render status panel
+    renderStatusPanel(totalBuy, totalSell, qty, avg, totalSplits, totalBonus);
+    
+    // Show summary if there are transactions
+    if (transactions.length > 0) {
+        renderSummary(totalBuy, totalSell, qty, avg, invested);
+        const summaryElement = document.getElementById('summarySection');
+        if (summaryElement) summaryElement.style.display = 'block';
     } else {
-        statusDiv.innerHTML = `<span class="text-danger"><i class="bi bi-x-circle me-1"></i>Please select a valid CSV file</span>`;
+        // Hide summary if no transactions
+        const summaryElement = document.getElementById('summarySection');
+        if (summaryElement) summaryElement.style.display = 'none';
     }
 }
 
-// Get transaction category based on voucher type and particulars - FIXED
-function getTransactionCategory(particulars, voucherType) {
-    if (voucherType === 'Bank Receipts') return 'payin';
-    if (voucherType === 'Bank Payments') return 'payout';
+// Render transactions table
+function renderTable(rows) {
+    const tableElement = document.getElementById('transactionsTable');
+    if (!tableElement) return; // Safety check
     
-    if (voucherType === 'Journal Entry') {
-        const text = particulars.toLowerCase().trim();
-        
-        // EXCLUDE all Net settlement entries - FIXED to handle any format
-        if (text.startsWith('net settlement')) {
-            return 'excluded'; // Mark for exclusion
-        }
-        
-        // DP Charges - matches various formats
-        if (text.includes('dp charges') || text.includes('dp charge')) {
-            return 'dpCharges';
-        }
-        
-        // AMC Charges - matches various formats  
-        if (text.includes('amc for demat') || text.includes('amc charges') || text.includes('annual maintenance')) {
-            return 'amcCharges';
-        }
-        
-        // Delayed Payment Charges - matches various formats
-        if (text.includes('delayed payment') || text.includes('delay charges') || text.includes('delayed charges')) {
-            return 'delayCharges';
-        }
-        
-        // All other journal entries (excluding net settlement)
-        return 'otherJournal';
-    }
+    let html = '';
     
-    return 'otherJournal';
-}
-
-// Analyze ledger data and categorize transactions
-function analyzeLedgerData() {
-    console.log('Starting analysis...'); // Debug log
-    
-    const categories = {
-        payin: [],
-        payout: [],
-        dpCharges: [],
-        amcCharges: [],
-        delayCharges: [],
-        otherJournal: []
-    };
-
-    let totals = {
-        payin: 0,
-        payout: 0,
-        dpCharges: 0,
-        amcCharges: 0,
-        delayCharges: 0,
-        otherJournal: 0
-    };
-
-    let excludedCount = 0; // Track excluded entries
-    let netSettlementExcluded = []; // Track what was excluded for debugging
-
-    ledgerData.forEach((row, index) => {
-        const voucherType = row.voucher_type?.trim() || '';
-        const particulars = row.particulars?.trim() || '';
-        const debit = parseFloat(row.debit) || 0;
-        const credit = parseFloat(row.credit) || 0;
-        const date = row.posting_date?.trim() || '';
-
-        const category = getTransactionCategory(particulars, voucherType);
-        console.log(`Row ${index} - "${particulars}" categorized as: ${category}`); // Debug log
-        
-        // Skip excluded entries (Net settlement)
-        if (category === 'excluded') {
-            excludedCount++;
-            netSettlementExcluded.push(particulars);
-            console.log(`Row ${index} EXCLUDED: ${particulars}`);
-            return; // Skip this transaction
-        }
-        
-        const transaction = {
-            date: date,
-            particulars: particulars,
-            amount: category === 'payin' ? credit : debit,
-            voucherType: voucherType
-        };
-
-        categories[category].push(transaction);
-        totals[category] += transaction.amount;
-    });
-
-    console.log('Final categories:', categories); // Debug log
-    console.log('Final totals:', totals); // Debug log
-    console.log(`Excluded ${excludedCount} "Net settlement" entries:`); // Debug log
-    console.log('Excluded entries:', netSettlementExcluded); // Debug log
-
-    // Update summary cards
-    updateSummaryCards(totals);
-    
-    // Populate tables
-    populateTables(categories);
-    
-    // Show results
-    document.getElementById('summaryCards').style.display = 'block';
-    document.getElementById('detailedSections').style.display = 'block';
-}
-
-// Update summary cards
-function updateSummaryCards(totals) {
-    document.getElementById('totalPayin').textContent = `₹${formatAmount(totals.payin)}`;
-    document.getElementById('totalPayout').textContent = `₹${formatAmount(totals.payout)}`;
-    document.getElementById('totalDpCharges').textContent = `₹${formatAmount(totals.dpCharges)}`;
-    document.getElementById('totalAmcCharges').textContent = `₹${formatAmount(totals.amcCharges)}`;
-    document.getElementById('totalDelayCharges').textContent = `₹${formatAmount(totals.delayCharges)}`;
-    document.getElementById('totalOtherJournal').textContent = `₹${formatAmount(totals.otherJournal)}`;
-}
-
-// Populate all tables
-function populateTables(categories) {
-    populateTable('payinTableBody', 'payinCount', categories.payin);
-    populateTable('payoutTableBody', 'payoutCount', categories.payout);
-    populateTable('dpChargesTableBody', 'dpChargesCount', categories.dpCharges);
-    populateTable('amcChargesTableBody', 'amcChargesCount', categories.amcCharges);
-    populateTable('delayChargesTableBody', 'delayChargesCount', categories.delayCharges);
-    populateTable('otherJournalTableBody', 'otherJournalCount', categories.otherJournal);
-}
-
-// Populate individual table
-function populateTable(tableBodyId, countId, data) {
-    const tbody = document.getElementById(tableBodyId);
-    const countElement = document.getElementById(countId);
-    
-    if (!tbody || !countElement) {
-        console.error(`Elements not found: ${tableBodyId} or ${countId}`);
-        return;
-    }
-    
-    tbody.innerHTML = '';
-    countElement.textContent = data.length;
-    
-    if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">No transactions found</td></tr>';
-        return;
-    }
-    
-    // Sort by date (newest first)
-    data.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    data.forEach(item => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${formatDate(item.date)}</td>
-            <td><small>${escapeHtml(item.particulars)}</small></td>
-            <td class="text-end fw-bold">₹${formatAmount(item.amount)}</td>
+    if (transactions.length === 0) {
+        html = `
+            <tr>
+                <td colspan="8" class="text-center text-muted py-4">
+                    <i class="bi bi-plus-circle" style="font-size: 2rem;"></i>
+                    <div class="mt-2">No transactions added yet</div>
+                    <small>Click "Add Buy", "Add Sell", "Add Split", or "Add Bonus" to get started</small>
+                </td>
+            </tr>
         `;
-        tbody.appendChild(row);
-    });
-}
-
-// Format amount for display
-function formatAmount(amount) {
-    if (isNaN(amount) || amount === null || amount === undefined) return '0.00';
-    return new Intl.NumberFormat('en-IN', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    }).format(amount);
-}
-
-// Format date for display
-function formatDate(dateStr) {
-    if (!dateStr) return 'N/A';
-    try {
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return dateStr;
-        return date.toLocaleDateString('en-IN', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
+    } else {
+        transactions.forEach((transaction, idx) => {
+            const row = rows[idx];
+            html += `
+                <tr>
+                    <td>${row.idx}</td>
+                    <td>
+                        <span class="badge ${getBadgeClass(transaction.type)}">${transaction.type}</span>
+                    </td>
+                    <td>
+                        ${renderQuantityInput(transaction, idx)}
+                    </td>
+                    <td>
+                        ${renderPriceInput(transaction, idx)}
+                    </td>
+                    <td>
+                        <span class="fw-bold">${row.qty.toLocaleString('en-IN')}</span>
+                    </td>
+                    <td>
+                        <span class="text-primary">₹${row.avg.toFixed(2)}</span>
+                    </td>
+                    <td>
+                        <small>${row.details}</small>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-danger btn-sm" 
+                                onclick="removeTransaction(${idx})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
         });
-    } catch (error) {
-        return dateStr;
-    }
-}
-
-// Escape HTML for security
-function escapeHtml(unsafe) {
-    if (!unsafe) return '';
-    return unsafe.toString()
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-// Reset function
-function resetLedgerRecon() {
-    if (confirm('Are you sure you want to reset the ledger analysis?')) {
-        ledgerData = [];
-        document.getElementById('ledgerFile').value = '';
-        document.getElementById('ledgerUploadStatus').textContent = 'Select a CSV file to analyze';
-        document.getElementById('summaryCards').style.display = 'none';
-        document.getElementById('detailedSections').style.display = 'none';
-    }
-}
-
-// Initialize ledger recon
-function ledgerReconInit() {
-    console.log('Ledger Recon initialized');
-}
-
-// Export summary function
-function exportLedgerSummary() {
-    if (ledgerData.length === 0) {
-        alert('No data to export. Please upload a CSV file first.');
-        return;
     }
     
-    // Create summary data for export
-    const summaryData = [
-        ['Category', 'Count', 'Total Amount'],
-        ['PAYIN (Bank Receipts)', document.getElementById('payinCount').textContent, document.getElementById('totalPayin').textContent],
-        ['PAYOUT (Bank Payments)', document.getElementById('payoutCount').textContent, document.getElementById('totalPayout').textContent],
-        ['DP Charges', document.getElementById('dpChargesCount').textContent, document.getElementById('totalDpCharges').textContent],
-        ['AMC Charges', document.getElementById('amcChargesCount').textContent, document.getElementById('totalAmcCharges').textContent],
-        ['Delayed Payment Charges', document.getElementById('delayChargesCount').textContent, document.getElementById('totalDelayCharges').textContent],
-        ['Other Journal Entries', document.getElementById('otherJournalCount').textContent, document.getElementById('totalOtherJournal').textContent]
+    tableElement.innerHTML = html;
+}
+
+// Render quantity/ratio input based on transaction type
+function renderQuantityInput(transaction, idx) {
+    if (transaction.type === 'BUY' || transaction.type === 'SELL') {
+        return `<input type="number" class="form-control form-control-sm" 
+                       value="${transaction.qty}" min="0" 
+                       onchange="updateTransactionField(${idx}, 'qty', this.value)"
+                       placeholder="Quantity">`;
+    } else if (transaction.type === 'SPLIT') {
+        return `
+            <div class="d-flex align-items-center">
+                <input type="number" class="form-control form-control-sm" 
+                       value="${transaction.ratioNew}" min="1" style="width: 60px"
+                       onchange="updateTransactionField(${idx}, 'ratioNew', this.value)">
+                <span class="mx-1">:</span>
+                <input type="number" class="form-control form-control-sm" 
+                       value="${transaction.ratioOld}" min="1" style="width: 60px"
+                       onchange="updateTransactionField(${idx}, 'ratioOld', this.value)">
+            </div>
+        `;
+    } else if (transaction.type === 'BONUS') {
+        return `
+            <div class="d-flex align-items-center">
+                <input type="number" class="form-control form-control-sm" 
+                       value="${transaction.ratioFree}" min="1" style="width: 60px"
+                       onchange="updateTransactionField(${idx}, 'ratioFree', this.value)">
+                <span class="mx-1">:</span>
+                <input type="number" class="form-control form-control-sm" 
+                       value="${transaction.ratioHeld}" min="1" style="width: 60px"
+                       onchange="updateTransactionField(${idx}, 'ratioHeld', this.value)">
+            </div>
+        `;
+    }
+}
+
+// Render price input based on transaction type
+function renderPriceInput(transaction, idx) {
+    if (transaction.type === 'BUY' || transaction.type === 'SELL') {
+        return `<input type="number" class="form-control form-control-sm" 
+                       value="${transaction.price}" min="0" step="0.01"
+                       onchange="updateTransactionField(${idx}, 'price', this.value)"
+                       placeholder="Price">`;
+    } else if (transaction.type === 'BONUS') {
+        return '<span class="badge bg-success">₹0.00</span>';
+    } else {
+        return '<span class="text-muted">—</span>';
+    }
+}
+
+// Get badge class for transaction type
+function getBadgeClass(type) {
+    switch (type) {
+        case 'BUY': return 'bg-primary';
+        case 'SELL': return 'bg-danger';
+        case 'SPLIT': return 'bg-secondary';
+        case 'BONUS': return 'bg-success';
+        default: return 'bg-light';
+    }
+}
+
+// Render status panel
+function renderStatusPanel(totalBuy, totalSell, finalQty, avgPrice, totalSplits, totalBonus) {
+    const statusElement = document.getElementById('statusPanel');
+    if (!statusElement) return; // Safety check
+    
+    const finalValue = finalQty * avgPrice;
+    
+    const statusHtml = `
+        <div class="col-md-2">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center py-3">
+                    <i class="bi bi-cart-plus" style="font-size: 1.5rem;"></i>
+                    <h5 class="mt-2">${totalBuy}</h5>
+                    <small>Total Bought</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card bg-danger text-white">
+                <div class="card-body text-center py-3">
+                    <i class="bi bi-cart-dash" style="font-size: 1.5rem;"></i>
+                    <h5 class="mt-2">${totalSell}</h5>
+                    <small>Total Sold</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center py-3">
+                    <i class="bi bi-box" style="font-size: 1.5rem;"></i>
+                    <h5 class="mt-2">${finalQty}</h5>
+                    <small>Final Holdings</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center py-3">
+                    <i class="bi bi-currency-rupee" style="font-size: 1.5rem;"></i>
+                    <h5 class="mt-2">₹${avgPrice.toFixed(2)}</h5>
+                    <small>Avg Price</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center py-3">
+                    <i class="bi bi-gift" style="font-size: 1.5rem;"></i>
+                    <h5 class="mt-2">${totalBonus}</h5>
+                    <small>Bonus Shares</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card bg-dark text-white">
+                <div class="card-body text-center py-3">
+                    <i class="bi bi-cash-stack" style="font-size: 1.5rem;"></i>
+                    <h5 class="mt-2">₹${finalValue.toFixed(0)}</h5>
+                    <small>Holding Value</small>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    statusElement.innerHTML = statusHtml;
+}
+
+// Render summary
+function renderSummary(totalBuy, totalSell, finalQty, avgPrice, totalInvested) {
+    const investmentElement = document.getElementById('investmentSummary');
+    const corporateElement = document.getElementById('corporateActionsSummary');
+    
+    if (investmentElement) {
+        const investmentSummary = `
+            <ul class="list-unstyled">
+                <li><strong>Total Shares Bought:</strong> ${totalBuy}</li>
+                <li><strong>Total Shares Sold:</strong> ${totalSell}</li>
+                <li><strong>Net Investment:</strong> ₹${totalInvested.toFixed(2)}</li>
+                <li><strong>Current Holdings:</strong> ${finalQty} shares</li>
+                <li><strong>Average Buy Price:</strong> ₹${avgPrice.toFixed(2)}</li>
+            </ul>
+        `;
+        investmentElement.innerHTML = investmentSummary;
+    }
+    
+    if (corporateElement) {
+        const corporateActionsSummary = `
+            <ul class="list-unstyled">
+                <li><strong>Split Events:</strong> ${transactions.filter(t => t.type === 'SPLIT').length}</li>
+                <li><strong>Bonus Events:</strong> ${transactions.filter(t => t.type === 'BONUS').length}</li>
+                <li><strong>Total Bonus Shares:</strong> ${totalBonus || 0}</li>
+                <li><strong>Total Value at Avg Cost:</strong> ₹${(finalQty * avgPrice).toFixed(2)}</li>
+            </ul>
+        `;
+        corporateElement.innerHTML = corporateActionsSummary;
+    }
+}
+
+// Reset function - FIXED
+function resetSplitBonusPro() {
+    if (confirm('Are you sure you want to reset all transactions?')) {
+        transactions = [];
+        renderTransactions();
+    }
+}
+
+// Load sample data
+function loadSampleSplitBonusProData() {
+    transactions = [
+        {type: 'BUY', qty: 100, price: 100},
+        {type: 'SELL', qty: 20, price: 120},
+        {type: 'SPLIT', ratioNew: 2, ratioOld: 1},
+        {type: 'BONUS', ratioFree: 1, ratioHeld: 4},
+        {type: 'BUY', qty: 50, price: 60}
     ];
-    
-    const csvContent = Papa.unparse(summaryData);
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.setAttribute('hidden', '');
-    a.setAttribute('href', url);
-    a.setAttribute('download', 'ledger_recon_summary.csv');
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
+    renderTransactions();
 }
+
+// Initialize on load - FIXED with proper DOM check
+function splitBonusProInit() {
+    // Add a small delay to ensure DOM is ready
+    setTimeout(() => {
+        renderTransactions();
+    }, 100);
+}
+
+// Alternative initialization that waits for DOM
+document.addEventListener('DOMContentLoaded', function() {
+    // Only initialize if we're on the split bonus pro section
+    if (document.getElementById('splitbonuspro-section')) {
+        splitBonusProInit();
+    }
+});
 
 // Make functions globally available
-window.handleLedgerUpload = handleLedgerUpload;
-window.resetLedgerRecon = resetLedgerRecon;
-window.ledgerReconInit = ledgerReconInit;
-window.exportLedgerSummary = exportLedgerSummary;
+window.addTransaction = addTransaction;
+window.removeTransaction = removeTransaction;
+window.updateTransactionField = updateTransactionField;
+window.resetSplitBonusPro = resetSplitBonusPro;
+window.loadSampleSplitBonusProData = loadSampleSplitBonusProData;
+window.splitBonusProInit = splitBonusProInit;
 
 // Keyboard shortcuts
 document.addEventListener('keydown', function(e) {
-    if (document.getElementById('ledgerrecon-section')?.style.display === 'none') return;
+    const section = document.getElementById('splitbonuspro-section');
+    if (!section || section.style.display === 'none') return;
     
-    if (e.ctrlKey && e.key === 'e') {
+    if (e.ctrlKey && e.key === 'l') {
         e.preventDefault();
-        exportLedgerSummary();
+        loadSampleSplitBonusProData();
     }
     
     if (e.ctrlKey && e.key === 'r') {
         e.preventDefault();
-        resetLedgerRecon();
+        resetSplitBonusPro();
     }
 });
