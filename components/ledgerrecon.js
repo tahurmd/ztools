@@ -1,3 +1,47 @@
+// Simple column name normalizer for basic matching
+function normalizeColumnName(columnName) {
+    return columnName
+        .toLowerCase()
+        .trim()
+        .replace(/[_\s-]+/g, '') // Remove underscores, spaces, and hyphens
+        .replace(/[^\w]/g, ''); // Remove any non-word characters
+}
+
+// Simple hack to find particular and voucher type columns
+function findColumnHack(headers, targetType) {
+    const normalized = headers.map(h => ({
+        original: h,
+        normalized: normalizeColumnName(h)
+    }));
+    
+    if (targetType === 'particular') {
+        // Look for particular, particulars, description, narration
+        const found = normalized.find(h => 
+            h.normalized.includes('particular') || 
+            h.normalized.includes('description') || 
+            h.normalized.includes('narration') ||
+            h.normalized.includes('details')
+        );
+        return found ? found.original : null;
+    }
+    
+    if (targetType === 'voucher') {
+        // Look for voucher type, voucher_type, type
+        const found = normalized.find(h => 
+            h.normalized.includes('vouchertype') || 
+            h.normalized.includes('type')
+        );
+        return found ? found.original : null;
+    }
+    
+    return null;
+}
+
+
+
+
+
+
 // Global variables
 let csvData = [];
 let categorizedData = [];
