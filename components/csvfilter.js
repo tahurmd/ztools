@@ -59,11 +59,12 @@ function getShortFileName(name, maxLen = 15) {
     return name.length > maxLen ? name.substring(0, maxLen - 3) + "..." : name;
 }
 
+// FIXED: Updated to show the new filterOptionsCard
 function showOptionsWhenBothUploaded() {
     if (csvData1.length > 0 && csvData2.length > 0) {
         document.getElementById('columnSelectionSection').style.display = 'block';
-        document.getElementById('postfixFilterOption').style.display = 'block';
-        document.getElementById('isinFilterOption').style.display = 'block';
+        // Show the filter options card with toggle switches
+        document.getElementById('filterOptionsCard').style.display = 'block';
     }
 }
 
@@ -291,6 +292,62 @@ function escapeHtml(unsafe) {
          .replace(/'/g, "&#039;");
 }
 
+// NEW: Complete reset function for the Reset button
+function resetCsvFilter() {
+    // Reset file inputs
+    document.getElementById('csvFile1').value = '';
+    document.getElementById('csvFile2').value = '';
+
+    // Clear status text
+    document.getElementById('file1Status').textContent = 'No file selected';
+    document.getElementById('file2Status').textContent = 'No file selected';
+
+    // Hide sections that appear after upload
+    document.getElementById('columnSelectionSection').style.display = 'none';
+    document.getElementById('filterOptionsCard').style.display = 'none';
+    document.getElementById('resultsSection').style.display = 'none';
+
+    // Reset dropdowns and result tables
+    document.getElementById('column1Dropdown').innerHTML = '<option value="">Select a column...</option>';
+    document.getElementById('column2Dropdown').innerHTML = '<option value="">Select a column...</option>';
+    document.getElementById('uniqueValues1').innerHTML = '';
+    document.getElementById('uniqueValues2').innerHTML = '';
+
+    // Reset counts
+    document.getElementById('count1').textContent = '0';
+    document.getElementById('count2').textContent = '0';
+    document.getElementById('commonCount').textContent = '0';
+    document.getElementById('uniqueToFile1').textContent = '0';
+    document.getElementById('uniqueToFile2').textContent = '0';
+    
+    // Reset toggle switches
+    document.getElementById('ignorePostfixCheck').checked = false;
+    document.getElementById('ignoreIsinCheck').checked = false;
+
+    // Clear any existing filter badges
+    const badge = document.getElementById('postfixFilterActiveBadge');
+    if (badge) badge.remove();
+
+    // Reset CSV data variables
+    csvData1 = [];
+    csvData2 = [];
+    headers1 = [];
+    headers2 = [];
+    csvFile1Name = "File 1";
+    csvFile2Name = "File 2";
+
+    // Reset table headers
+    let file1Header = document.getElementById('file1ResultHeader');
+    let file2Header = document.getElementById('file2ResultHeader');
+    if (file1Header) { 
+        file1Header.innerHTML = `<i class="bi bi-exclamation-triangle me-1"></i>Only in File 1`; 
+    }
+    if (file2Header) { 
+        file2Header.innerHTML = `<i class="bi bi-info-circle me-1"></i>Only in File 2`; 
+    }
+}
+
+// UPDATED: Fixed resetAnalytics function
 function resetAnalytics() {
     csvData1 = [];
     csvData2 = [];
@@ -304,27 +361,44 @@ function resetAnalytics() {
     document.getElementById('file2Status').textContent = 'No file selected';
     document.getElementById('columnSelectionSection').style.display = 'none';
     document.getElementById('resultsSection').style.display = 'none';
-    document.getElementById('postfixFilterOption').style.display = 'none';
-    document.getElementById('isinFilterOption').style.display = 'none';
+    
+    // FIXED: Hide the new filterOptionsCard instead of individual filter options
+    document.getElementById('filterOptionsCard').style.display = 'none';
+    
     const badge = document.getElementById('postfixFilterActiveBadge');
     if (badge) badge.remove();
     document.getElementById('column1Dropdown').innerHTML = '<option value="">Select a column...</option>';
     document.getElementById('column2Dropdown').innerHTML = '<option value="">Select a column...</option>';
+    
+    // Reset toggle switches
+    document.getElementById('ignorePostfixCheck').checked = false;
+    document.getElementById('ignoreIsinCheck').checked = false;
+    
     // Also clear table headers if present
     let file1Header = document.getElementById('file1ResultHeader');
     let file2Header = document.getElementById('file2ResultHeader');
-    if (file1Header) { file1Header.textContent = "Only in File 1"; }
-    if (file2Header) { file2Header.textContent = "Only in File 2"; }
+    if (file1Header) { 
+        file1Header.innerHTML = `<i class="bi bi-exclamation-triangle me-1"></i>Only in File 1`; 
+    }
+    if (file2Header) { 
+        file2Header.innerHTML = `<i class="bi bi-info-circle me-1"></i>Only in File 2`; 
+    }
 }
 
-// Drag and drop
+// Drag and drop functionality
 function setupDragAndDrop() {
     const dropZones = ['csvFile1', 'csvFile2'];
     dropZones.forEach((id, index) => {
         const input = document.getElementById(id);
         const container = input.closest('.card-body');
-        container.addEventListener('dragover', function(e) { e.preventDefault(); container.classList.add('border-primary'); });
-        container.addEventListener('dragleave', function(e) { e.preventDefault(); container.classList.remove('border-primary'); });
+        container.addEventListener('dragover', function(e) { 
+            e.preventDefault(); 
+            container.classList.add('border-primary'); 
+        });
+        container.addEventListener('dragleave', function(e) { 
+            e.preventDefault(); 
+            container.classList.remove('border-primary'); 
+        });
         container.addEventListener('drop', function(e) {
             e.preventDefault();
             container.classList.remove('border-primary');
@@ -337,17 +411,21 @@ function setupDragAndDrop() {
     });
 }
 
+// Initialize drag and drop when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     setupDragAndDrop();
 });
 
+// Keyboard shortcuts
 document.addEventListener('keydown', function(e) {
+    // Ctrl+R for reset (only when CSV filter section is active)
     if (e.ctrlKey && e.key === 'r') {
         e.preventDefault();
         if (document.getElementById('csvfilter-section') && document.getElementById('csvfilter-section').style.display !== 'none') {
-            resetAnalytics();
+            resetCsvFilter();
         }
     }
+    // Ctrl+E for export (only when CSV filter section is active)
     if (e.ctrlKey && e.key === 'e') {
         e.preventDefault();
         if (document.getElementById('csvfilter-section') && document.getElementById('csvfilter-section').style.display !== 'none') {

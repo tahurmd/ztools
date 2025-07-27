@@ -1,115 +1,109 @@
-
-// Load links immediately when component loads
-function dashboardInit() {
-    loadAllLinks();
+// Quick Links functionality (simplified)
+function initQuickLinks() {
+    updateLinksCount();
+    initializeSearch();
 }
 
-function loadAllLinks() {
-    const links = [
-        // Internal Tools
+// Update links count in header
+function updateLinksCount() {
+    const allCards = document.querySelectorAll('.link-card-wrapper');
+    document.getElementById('linksCountBadge').textContent = `${allCards.length} links`;
+    document.getElementById('displayedCount').textContent = allCards.length;
+}
+
+// Filter links by search input
+function filterLinks() {
+    const searchTerm = document.getElementById('linkSearch').value.toLowerCase();
+    const allCards = document.querySelectorAll('.link-card-wrapper');
+    const noResultsMsg = document.getElementById('noResultsMessage');
+    
+    let visibleCount = 0;
+    
+    allCards.forEach(card => {
+        const name = card.getAttribute('data-name').toLowerCase();
+        const tags = card.getAttribute('data-tags').toLowerCase();
         
-        {
-            title: 'SGB Intrest Calender',
-            description: 'SGB Intrest Calender from Tradingqna',
-            icon: 'bi-newspaper',
-            color: 'info',
-            type: 'external',
-            url: 'https://tradingqna.com/t/interest-payment-dates-for-sovereign-gold-bonds-sgbs/145120'
-        },
-        {
-            title: 'NSE India',
-            description: 'National Stock Exchange of India',
-            icon: 'bi-graph-up-arrow',
-            color: 'primary',
-            type: 'external',
-            url: 'https://www.nseindia.com/'
-        },
-        {
-            title: 'BSE India',
-            description: 'Bombay Stock Exchange',
-            icon: 'bi-bar-chart-line',
-            color: 'success',
-            type: 'external',
-            url: 'https://www.bseindia.com/'
-        },
-     
-        {
-            title: 'Zerodha Varsity Live',
-            description: 'Zerodha Varsity Live',
-            icon: 'bi-journal-text',
-            color: 'warning',
-            type: 'external',
-            url: 'https://zerodha.com/varsity/live'
-        },
-        {
-            title: 'RBI India',
-            description: 'Reserve Bank of India',
-            icon: 'bi-bank2',
-            color: 'secondary',
-            type: 'external',
-            url: 'https://www.rbi.org.in/'
-        },
-        {
-            title: 'TradingView',
-            description: 'Charts and trading ideas',
-            icon: 'bi-graph-up',
-            color: 'dark',
-            type: 'external',
-            url: 'https://www.tradingview.com/'
-        },
-        {
-            title: 'CVLKRA',
-            description: 'kyc Verification',
-            icon: 'bi-arrow-up-circle',
-            color: 'success',
-            type: 'external',
-            url: 'https://www.cvlkra.com/'
+        if (!searchTerm || name.includes(searchTerm) || tags.includes(searchTerm)) {
+            card.style.display = 'block';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
         }
-    ];
-    
-    const container = document.getElementById('quick-links-container');
-    if (!container) return;
-    
-    let html = '';
-    
-    links.forEach(link => {
-        const buttonText = link.type === 'internal' ? 'Open Tool' : 'Visit Site';
-        const buttonIcon = link.type === 'internal' ? 'bi-arrow-right' : 'bi-box-arrow-up-right';
-        
-        html += `
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-                <div class="card h-100 border-${link.color} quick-link-card" style="border-width: 2px;">
-                    <div class="card-body d-flex flex-column text-center">
-                        <div class="mb-3">
-                            <i class="bi ${link.icon} text-${link.color}" style="font-size: 2.5rem;"></i>
-                        </div>
-                        <h6 class="card-title">${link.title}</h6>
-                        <p class="card-text text-muted small flex-grow-1">${link.description}</p>
-                        <button class="btn btn-${link.color} btn-sm mt-auto" 
-                                onclick="handleClick('${link.type}', '${link.page || ''}', '${link.url || ''}')">
-                            <i class="bi ${buttonIcon} me-1"></i>
-                            ${buttonText}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
     });
     
-    container.innerHTML = html;
-}
-
-function handleClick(type, page, url) {
-    if (type === 'internal' && page) {
-        if (typeof loadPage === 'function') {
-            loadPage(page);
-        } else {
-            alert('Navigation not available');
-        }
-    } else if (type === 'external' && url) {
-        window.open(url, '_blank', 'noopener,noreferrer');
+    // Update counts
+    document.getElementById('displayedCount').textContent = visibleCount;
+    document.getElementById('resultsBadge').textContent = visibleCount > 0 ? 'Click to access' : 'No matches';
+    
+    // Show/hide no results message
+    if (visibleCount === 0 && searchTerm) {
+        noResultsMsg.classList.remove('d-none');
+    } else {
+        noResultsMsg.classList.add('d-none');
+    }
+    
+    // Update filtered badge
+    const filteredBadge = document.getElementById('filteredBadge');
+    if (searchTerm) {
+        filteredBadge.classList.remove('d-none');
+        filteredBadge.textContent = `${visibleCount} filtered`;
+    } else {
+        filteredBadge.classList.add('d-none');
     }
 }
 
-// Auto-load on component insert
-setTimeout(dashboardInit, 100);
+// Clear search
+function clearSearch() {
+    document.getElementById('linkSearch').value = '';
+    filterLinks();
+}
+
+// Refresh quick links
+function refreshQuickLinks() {
+    const refreshBtn = event.target;
+    const originalHtml = refreshBtn.innerHTML;
+    
+    refreshBtn.innerHTML = '<i class="bi bi-arrow-clockwise spinner-border spinner-border-sm me-1"></i>Refreshing...';
+    refreshBtn.disabled = true;
+    
+    setTimeout(() => {
+        clearSearch();
+        updateLinksCount();
+        
+        refreshBtn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Updated!';
+        setTimeout(() => {
+            refreshBtn.innerHTML = originalHtml;
+            refreshBtn.disabled = false;
+        }, 1000);
+    }, 1000);
+}
+
+// Initialize search functionality
+function initializeSearch() {
+    const searchInput = document.getElementById('linkSearch');
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            searchInput.focus();
+        }
+        
+        if (e.key === 'Escape' && document.activeElement === searchInput) {
+            clearSearch();
+            searchInput.blur();
+        }
+    });
+}
+
+// Make functions globally available
+window.filterLinks = filterLinks;
+window.clearSearch = clearSearch;
+window.refreshQuickLinks = refreshQuickLinks;
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('quicklinks-section')) {
+        initQuickLinks();
+    }
+});

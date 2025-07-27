@@ -1,76 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Basic Meta Tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ztools</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="/assets/main.css">
-    <head>
-        
-         
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-        
-
-        <!-- Rest of your existing head content -->
-    </head>
     
+    <!-- App Meta Information -->
+    <meta name="application-name" content="Z-Tools">
+    <meta name="author" content="Tahur">
+    <meta name="description" content="Comprehensive utility suite for finance operations: CSV Filter, Tradewise Calculator, IFSC Validator, Penalty Calculator, and Ledger Reconciliation tools">
+    
+    <!-- Page Title -->
+    <title>Ztools</title>
+    
+    <!-- External CSS Dependencies -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/rss-parser@3.13.0/dist/rss-parser.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/main.css">
+    
+    <!-- External JavaScript Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 </head>
+
 <body>
-    <!-- Sidebar -->
+    <!-- ======================== SIDEBAR NAVIGATION ======================== -->
     <nav class="sidebar"> 
+        <!-- Brand/Logo Section -->
         <div class="text-center mb-4">
             <h4 class="text-white fw-bold">
                 <a href="index.html" class="text-white text-decoration-none">Z-Tools</a>
             </h4>
         </div>
+        
+        <!-- Navigation Menu -->
         <ul class="nav flex-column">
+           <!-- Quick Links -->
             <li class="nav-item">
-                <a class="nav-link active" href="#" data-section="quiklinks">
-                    <i class=" bi bi-link-45deg"></i>
-                    <span>Quik Links</span>
+                <a class="nav-link active" href="#" data-section="quicklinks">
+                    <i class="bi bi bi-link-45deg""></i>
+                    <span>Quick Links</span>
                 </a>
             </li>
+            
+
+
+            <!-- rss feeds -->
+            <li class="nav-item">
+                <a class="nav-link " href="#" data-section="rssfeeds">
+                    <i class="bi bi bi-rss""></i>
+                    <span>Rss Feeds</span>
+                </a>
+            </li>
+
+
+            
+            <!-- CSV Filter Tool -->
             <li class="nav-item">
                 <a class="nav-link" href="#" data-section="csvfilter">
                     <i class="bi bi-filetype-csv"></i>
                     <span>CSV Filter</span>
                 </a>
             </li>
+            
+            <!-- Tradewise Calculator -->
             <li class="nav-item">
-                <a class="nav-link" href="#" data-section="buyavgc">
-                    <i class="bi bi-calculator-fill"></i>
-                    <span>Buy Avg Calc</span>
+                <a class="nav-link" href="#" data-section="tradewise">
+                    <i class="bi bi-bar-chart-steps"></i>
+                    <span>Tradewise Calc</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" data-section="splitbonus">
-                    <i class="bi bi-hr"></i>
-                    <span>Split & Bonus</span>
-                </a>
-            </li>
+
+            <!-- IFSC Finder Tool -->
             <li class="nav-item">
                 <a class="nav-link" href="#" data-section="ifsc">
                     <i class="bi bi-bank"></i>
                     <span>IFSC Finder</span>
                 </a>
             </li>
+            
+            <!-- Penalty Calculator -->
             <li class="nav-item">
                 <a class="nav-link" href="#" data-section="penaltycalc">
                     <i class="bi bi-cash-stack"></i>
                     <span>Penalty Calc</span>
                 </a>
             </li>
+            
+            <!-- Ledger Reconciliation -->
             <li class="nav-item">
-                <a class="nav-link" href="#" data-section="splitbonuspro">
-                    <i class="bi bi-bar-chart-steps"></i>
-                    <span>Split & Bonus <span class="badge bg-primary">pro</span></span>
+                <a class="nav-link" href="#" data-section="ledgerrecon">
+                    <i class="bi bi-person-fill"></i>
+                    <span>Ledger Recon</span>
                 </a>
             </li>
+            
+            <!-- About Section -->
             <li class="nav-item">
                 <a class="nav-link" href="#" data-section="about">
                     <i class="bi bi-person-fill"></i>
@@ -80,13 +107,16 @@
         </ul>
     </nav>
 
-    <!-- Top Navbar -->
+    <!-- ======================== TOP NAVIGATION BAR ======================== -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container-fluid">
+            <!-- Navbar Brand (Reserved for future use) -->
             <span class="navbar-brand mb-0 h1"><!--for future use--></span>
+            
+            <!-- Navbar Right Section -->
             <div class="d-flex">
                 <span class="navbar-text me-3">
-                    
+                    <!-- Reserved for future use -->
                 </span>
                 <span class="navbar-text">
                     <!--for future use-->
@@ -95,1171 +125,1721 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="main-content" style="margin-top: 80px;">
-        <!-- Quiklinks Section -->
-   <section id="quiklinks-section" class="content-section">
-        <div class="row mb-4">
-            <!-- <div class="col-12">
-                <div class="card">
-                    <div class="card-body text-center py-4">
-                        <i class="bi bi-house-door text-primary" style="font-size: 1.5rem;"></i>
-                        <p class="text-muted">Quick links </p>
-                    </div>
-                </div>
-            </div> -->
-        </div>
-     
-        <!-- Quick Links Section -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">
-                            <i class="bi bi-link-45deg me-2"></i>Quick Links
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row" id="quick-links-container">
-                            <!-- Links will load here -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>   
-    </section>
-            <!-- Other sections (hidden by default) -->
-
-
-
-
-    <!-- CSV Filter Section -->
-    <section id="csvfilter-section" class="content-section" style="display: none;">
-        <div class="container-fluid px-0">
-            <div class="row mb-4">
-                <div class="col-12">
-                    <h2 class="mb-3 display-6">CSV Column Comparator</h2>
-                    <p class="text-muted mb-0 alert alert-primary" style="max-width: 700px;">
-                        Upload two CSV files and compare the values in selected columns. This tool helps you quickly find values that are unique to each file.
-                    </p>
-                </div>
-            </div>
-            <!-- CSV Upload Section -->
-            <div class="row g-4 mb-4">
-                <div class="col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="bi bi-file-earmark-spreadsheet me-2"></i>Upload First CSV File
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <input type="file" class="form-control" id="csvFile1" accept=".csv" onchange="handleFileUpload(1)">
-                            </div>
-                            <div id="file1Status" class="text-muted">No file selected</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="bi bi-file-earmark-spreadsheet me-2"></i>Upload Second CSV File
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <input type="file" class="form-control" id="csvFile2" accept=".csv" onchange="handleFileUpload(2)">
-                            </div>
-                            <div id="file2Status" class="text-muted">No file selected</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Column Selection Section -->
-            <div class="row g-4 mb-4 mt-5" id="columnSelectionSection" style="display: none;">
-                <div class="col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Select Column from First CSV</h5>
-                        </div>
-                        <div class="card-body">
-                            <select class="form-select" id="column1Dropdown" onchange="generateUniqueValues()">
-                                <option value="">Select a column...</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Select Column from Second CSV</h5>
-                        </div>
-                        <div class="card-body">
-                            <select class="form-select" id="column2Dropdown" onchange="generateUniqueValues()">
-                                <option value="">Select a column...</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mb-2" id="postfixFilterOption" style="display:none;">
-                <div class="col">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="ignorePostfixCheck" onchange="generateUniqueValues()">
-                        <label class="form-check-label" for="ignorePostfixCheck">
-                            Treat values like "ABC" and "ABC-BZ/BE/RE" as matching
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-2" id="isinFilterOption" style="display:none;">
-                <div class="col">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="ignoreIsinCheck" onchange="generateUniqueValues()">
-                        <label class="form-check-label" for="ignoreIsinCheck">
-                            Ignore values that are ISIN numbers in result
-                        </label>
-                    </div>
-                </div>
-            </div>
-            
-            
-            
-            <!-- Results Section -->
-            <div class="row" id="resultsSection" style="display: none;">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
-                            <h5 class="card-title mb-0">
-                                <i class="bi bi-table me-2"></i>Comparison Results: Unique & Common Values
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-4">
-                                <div class="col-md-6">
-                                    <div class="mb-2">
-                                        <h6 class="text-warning" id="file1ResultHeader">
-                                            <i class="bi bi-exclamation-triangle me-1"></i>
-                                            Only in File 1
-                                        </h6>
-                                        
-                                    </div>
-                                    <div class="table-responsive" style="max-height: 400px;">
-                                        <table class="table table-striped table-hover mb-0">
-                                            <thead class="table-dark sticky-top">
-                                                <tr>
-                                                    <th style="width: 3rem;">#</th>
-                                                    <th>Exclusive Values</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="uniqueValues1">
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="text-muted mt-2">
-                                        Values only in File 1: <span id="count1" class="fw-bold">0</span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-2">
-                                        <h6 class="text-info" id="file2ResultHeader">
-                                            <i class="bi bi-info-circle me-1"></i>
-                                            Only in File 2
-                                        </h6>
-                                        
-                                        
-                                    </div>
-                                    <div class="table-responsive" style="max-height: 400px;">
-                                        <table class="table table-striped table-hover mb-0">
-                                            <thead class="table-dark sticky-top">
-                                                <tr>
-                                                    <th style="width: 3rem;">#</th>
-                                                    <th>Exclusive Values</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="uniqueValues2">
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="text-muted mt-2">
-                                        Values only in File 2: <span id="count2" class="fw-bold">0</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Comparison Summary -->
-                            <div class="row g-4 mt-4">
-                                <div class="col-md-4">
-                                    <div class="card bg-success text-white h-100">
-                                        <div class="card-body text-center">
-                                            <h5 id="commonCount" class="mb-1">0</h5>
-                                            <small>Common Values</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="card bg-warning text-white h-100">
-                                        <div class="card-body text-center">
-                                            <h5 id="uniqueToFile1" class="mb-1">0</h5>
-                                            <small>Only in File 1</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="card bg-info text-white h-100">
-                                        <div class="card-body text-center">
-                                            <h5 id="uniqueToFile2" class="mb-1">0</h5>
-                                            <small>Only in File 2</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> <!-- card-body -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- ======================== MAIN CONTENT AREA ======================== -->
+    <div class="main-content" style="margin-top: 20px;">
         
-    <!-- Buy Average Calculator -->
+        <!-- ==================== QUICK LINKS SECTION ==================== -->
 
-    <section id="buyavgc-section" class="content-section" style="display: none;">
-            <h2 class="mb-4">
-              
-                <button class="btn btn-outline-secondary btn ms-3" onclick="resetCalculator()">
-                    <i class="bi bi-arrow-clockwise me-1"></i>Reset
-                </button>
-            </h2>
-            <div class="row mb-4">
-                <div class="col-md-4">
-                    <div class="card stats-card-3">
-                        <div class="card-body text-center">
-                            <i class="bi bi-basket-fill" style="font-size: 2rem;"></i>
-                            <h3 class="mt-2" id="totalQuantity">0</h3>
-                            <p class="mb-0">Total Quantity</p>
+        <section id="quicklinks-section" class="content-section"">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <!-- Header -->
+                    <div class="card-header bg-primary text-white py-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="mb-1">
+                                    <i class="bi bi-link-45deg fs-3 me-3"></i>Quick Links Hub
+                                </h4>
+                                <p class="mb-0 opacity-75">Commonly used links </p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-light text-primary fw-bold" id="linksCountBadge">0 links</span>
+                                    <span class="badge bg-light text-dark d-none" id="filteredBadge">0 filtered</span>
+                                </div>
+                                <button class="btn btn-light btn-sm px-3" onclick="refreshQuickLinks()">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card stats-card-2">
-                        <div class="card-body text-center">
-                            <i class="bi bi-currency-rupee" style="font-size: 2rem;"></i>
-                            <h3 class="mt-2">₹<span id="avgPrice">0.00</span></h3>
-                            <p class="mb-0">Buy Average</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card stats-card">
-                        <div class="card-body text-center">
-                            <i class="bi bi-cash-stack" style="font-size: 2rem;"></i>
-                            <h3 class="mt-2">₹<span id="totalInvestment">0.00</span></h3>
-                            <p class="mb-0">Total Investment</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">
-                        <i class="bi bi-list-ol me-2"></i>Stock Trades
-                    </h5>
-                    <button class="btn btn-primary btn-sm" onclick="addTradeRow()">
-                        <i class="bi bi-plus-circle me-1"></i>Add Trade
-                    </button>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th width="10%">#</th>
-                                    <th width="30%">Quantity</th>
-                                    <th width="30%">Price (₹)</th>
-                                    <th width="20%">Total Amount (₹)</th>
-                                    <th width="10%">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tradesTableBody">
-                                <tr id="trade-1">
-                                    <td class="align-middle">
-                                        <span class="badge bg-primary">1</span>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control trade-qty" 
-                                               placeholder="Enter quantity" 
-                                               min="1" step="1" onchange="calculateTotals()">
-                                    </td>
-                                    <td>
-                                        <div class="input-group">
-                                            <span class="input-group-text">₹</span>
-                                            <input type="number" class="form-control trade-price" 
-                                                   placeholder="Enter price" 
-                                                   step="0.01" onchange="calculateTotals()">
+        
+                    <!-- Main Content -->
+                    <div class="card-body p-0">
+                        
+                        <!-- Search Section -->
+                        <div class="border-bottom bg-light p-4">
+                            
+                            <div class="row g-4">
+                                <div class="col-md-8 col-12">
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-text bg-primary text-white">
+                                                <i class="bi bi-search"></i>
+                                            </span>
+                                            <input type="text" class="form-control" id="linkSearch" 
+                                                   placeholder="Search links by name, platform, or description..." 
+                                                   oninput="filterLinks()">
+                                            <button class="btn btn-outline-secondary" onclick="clearSearch()" title="Clear search">
+                                                <i class="bi bi-x-circle"></i>
+                                            </button>
                                         </div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <span class="fw-bold text-success trade-total">₹0.00</span>
-                                    </td>
-                                    <td class="align-middle">
-                                        <button class="btn btn-outline-danger btn-sm" 
-                                                onclick="removeTradeRow(1)" disabled>
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr id="trade-2">
-                                    <td class="align-middle">
-                                        <span class="badge bg-primary">2</span>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control trade-qty" 
-                                               placeholder="Enter quantity" 
-                                               min="1" step="1" onchange="calculateTotals()">
-                                    </td>
-                                    <td>
-                                        <div class="input-group">
-                                            <span class="input-group-text">₹</span>
-                                            <input type="number" class="form-control trade-price" 
-                                                   placeholder="Enter price" 
-                                                   step="0.01" onchange="calculateTotals()">
+                                        <small class="text-muted mt-2 d-block">
+                                            <i class="bi bi-lightbulb me-1"></i>
+                                            Press <kbd>Ctrl+K</kbd> to quickly focus search
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4 col-12">
+                                    <div class="border rounded-3 p-3 bg-white h-100 d-flex align-items-center justify-content-center">
+                                        <div class="text-center">
+                                            <i class="bi bi-grid-3x3-gap text-primary fs-2 mb-2"></i>
+                                            <div class="fw-bold text-primary" id="displayedCount">0</div>
+                                            <small class="text-muted">Links Available</small>
                                         </div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <span class="fw-bold text-success trade-total">₹0.00</span>
-                                    </td>
-                                    <td class="align-middle">
-                                        <button class="btn btn-outline-danger btn-sm" 
-                                                onclick="removeTradeRow(2)">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- All Links Cards Section -->
+                        <div class="p-4">
+                            
+                            
+                            <div class="row g-3" id="allLinksContainer">
+                                <!-- Trading Platforms -->
+                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 link-card-wrapper" data-name="Zerodha Kite" data-tags="trading platform zerodha kite stocks">
+                                    <a href="https://tradingqna.com/t/interest-payment-dates-for-sovereign-gold-bonds-sgbs/145120" target="_blank" 
+                                       class="btn btn-outline-success w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4 link-card">
+                                        <i class="bi bi-graph-up fs-1 mb-3 text-success"></i>
+                                        <div class="fw-bold fs-6 mb-1">SGB Interest Dates</div>
+                                        <small class="text-muted text-center">From Trading Qna</small>
+                                        <div class="mt-2">
+                                            <i class="bi bi-box-arrow-up-right text-success"></i>
+                                        </div>
+                                    </a>
+                                </div>
+        
+                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 link-card-wrapper" data-name="Zerodha Console" data-tags="zerodha console portfolio holdings">
+                                    <a href="https://assessment.eklavvya.com/" target="_blank" 
+                                       class="btn btn-outline-success w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4 link-card">
+                                        <i class="bi bi-speedometer2 fs-1 mb-3 text-success"></i>
+                                        <div class="fw-bold fs-6 mb-1">Exam Portal</div>
+                                        <small class="text-muted text-center">eklavvya </small>
+                                        <div class="mt-2">
+                                            <i class="bi bi-box-arrow-up-right text-success"></i>
+                                        </div>
+                                    </a>
+                                </div>
+        
+                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 link-card-wrapper" data-name="Zerodha Coin" data-tags="zerodha coin mutual funds mf sip">
+                                    <a href="https://coin.zerodha.com/" target="_blank" 
+                                       class="btn btn-outline-success w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4 link-card">
+                                        <i class="bi bi-currency-rupee fs-1 mb-3 text-success"></i>
+                                        <div class="fw-bold fs-6 mb-1">Zerodha Coin</div>
+                                        <small class="text-muted text-center">Mutual Funds</small>
+                                        <div class="mt-2">
+                                            <i class="bi bi-box-arrow-up-right text-success"></i>
+                                        </div>
+                                    </a>
+                                </div>
+        
+                                <!-- Stock Exchanges -->
+                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 link-card-wrapper" data-name="NSE India" data-tags="nse national stock exchange india market">
+                                    <a href="https://docs.google.com/spreadsheets/d/1AdXr4voOKs2RpxftI_eJ78J7j-fBremMGiOOnf0I9jc/edit?gid=0#gid=0" target="_blank" 
+                                       class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4 link-card">
+                                        <i class="bi bi-building fs-1 mb-3 text-primary"></i>
+                                        <div class="fw-bold fs-6 mb-1">MCX Settlement</div>
+                                        <small class="text-muted text-center">Cash & Physical Dates</small>
+                                        <div class="mt-2">
+                                            <i class="bi bi-box-arrow-up-right text-primary"></i>
+                                        </div>
+                                    </a>
+                                </div>
+        
+                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 link-card-wrapper" data-name="BSE India" data-tags="bse bombay stock exchange india sensex">
+                                    <a href="#" target="_blank" 
+                                       class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4 link-card">
+                                        <i class="bi bi-bar-chart-line fs-1 mb-3 text-primary"></i>
+                                        <div class="fw-bold fs-6 mb-1">PI Sheet</div>
+                                        <small class="text-muted text-center">currentMonth()</small>
+                                        <div class="mt-2">
+                                            <i class="bi bi-box-arrow-up-right text-primary"></i>
+                                        </div>
+                                    </a>
+                                </div>
+        
+                                <!-- Research & Analysis -->
+                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 link-card-wrapper" data-name="TradingView" data-tags="tradingview charts analysis technical indicators">
+                                    <a href="https://www.tradingview.com/" target="_blank" 
+                                       class="btn btn-outline-dark w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4 link-card">
+                                        <i class="bi bi-graph-up-arrow fs-1 mb-3 text-dark"></i>
+                                        <div class="fw-bold fs-6 mb-1">TradingView</div>
+                                        <small class="text-muted text-center">Charts & Analysis</small>
+                                        <div class="mt-2">
+                                            <i class="bi bi-box-arrow-up-right text-dark"></i>
+                                        </div>
+                                    </a>
+                                </div>
+        
+                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 link-card-wrapper" data-name="Varsity" data-tags="zerodha varsity education learning trading">
+                                    <a href="https://zerodha.com/varsity/" target="_blank" 
+                                       class="btn btn-outline-info w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4 link-card">
+                                        <i class="bi bi-book fs-1 mb-3 text-info"></i>
+                                        <div class="fw-bold fs-6 mb-1">Varsity</div>
+                                        <small class="text-muted text-center">Trading Education</small>
+                                        <div class="mt-2">
+                                            <i class="bi bi-box-arrow-up-right text-info"></i>
+                                        </div>
+                                    </a>
+                                </div>
+        
+                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 link-card-wrapper" data-name="Smallcase" data-tags="smallcase thematic investing portfolios">
+                                    <a href="https://smallcase.com/" target="_blank" 
+                                       class="btn btn-outline-info w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4 link-card">
+                                        <i class="bi bi-briefcase fs-1 mb-3 text-info"></i>
+                                        <div class="fw-bold fs-6 mb-1">Smallcase</div>
+                                        <small class="text-muted text-center">Thematic Investing</small>
+                                        <div class="mt-2">
+                                            <i class="bi bi-box-arrow-up-right text-info"></i>
+                                        </div>
+                                    </a>
+                                </div>
+        
+                                <!-- Regulators -->
+                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 link-card-wrapper" data-name="SEBI" data-tags="sebi securities exchange board regulator">
+                                    <a href="https://www.sebi.gov.in/" target="_blank" 
+                                       class="btn btn-outline-secondary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4 link-card">
+                                        <i class="bi bi-shield-check fs-1 mb-3 text-secondary"></i>
+                                        <div class="fw-bold fs-6 mb-1">SEBI</div>
+                                        <small class="text-muted text-center">Market Regulator</small>
+                                        <div class="mt-2">
+                                            <i class="bi bi-box-arrow-up-right text-secondary"></i>
+                                        </div>
+                                    </a>
+                                </div>
+        
+                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 link-card-wrapper" data-name="RBI" data-tags="rbi reserve bank india central bank">
+                                    <a href="https://www.rbi.org.in/" target="_blank" 
+                                       class="btn btn-outline-secondary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4 link-card">
+                                        <i class="bi bi-bank fs-1 mb-3 text-secondary"></i>
+                                        <div class="fw-bold fs-6 mb-1">RBI</div>
+                                        <small class="text-muted text-center">Central Bank</small>
+                                        <div class="mt-2">
+                                            <i class="bi bi-box-arrow-up-right text-secondary"></i>
+                                        </div>
+                                    </a>
+                                </div>
+        
+                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 link-card-wrapper" data-name="Income Tax" data-tags="income tax department government itr filing">
+                                    <a href="https://www.incometax.gov.in/" target="_blank" 
+                                       class="btn btn-outline-secondary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4 link-card">
+                                        <i class="bi bi-receipt fs-1 mb-3 text-secondary"></i>
+                                        <div class="fw-bold fs-6 mb-1">Income Tax</div>
+                                        <small class="text-muted text-center">Tax Department</small>
+                                        <div class="mt-2">
+                                            <i class="bi bi-box-arrow-up-right text-secondary"></i>
+                                        </div>
+                                    </a>
+                                </div>
+        
+                                <!-- Utilities -->
+                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 link-card-wrapper" data-name="CVLKRA" data-tags="cvl kra kyc documents verification">
+                                    <a href="https://www.cvlkra.com/" target="_blank" 
+                                       class="btn btn-outline-warning w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4 link-card">
+                                        <i class="bi bi-person-check fs-1 mb-3 text-warning"></i>
+                                        <div class="fw-bold fs-6 mb-1">CVL KRA</div>
+                                        <small class="text-muted text-center">KYC Verification</small>
+                                        <div class="mt-2">
+                                            <i class="bi bi-box-arrow-up-right text-warning"></i>
+                                        </div>
+                                    </a>
+                                </div>
+        
+                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 link-card-wrapper" data-name="Value Research" data-tags="value research mutual funds analysis rating">
+                                    <a href="https://www.valueresearchonline.com/" target="_blank" 
+                                       class="btn btn-outline-warning w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4 link-card">
+                                        <i class="bi bi-search fs-1 mb-3 text-warning"></i>
+                                        <div class="fw-bold fs-6 mb-1">Value Research</div>
+                                        <small class="text-muted text-center">MF Research</small>
+                                        <div class="mt-2">
+                                            <i class="bi bi-box-arrow-up-right text-warning"></i>
+                                        </div>
+                                    </a>
+                                </div>
+        
+                                <!-- MSE -->
+                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 link-card-wrapper" data-name="MSE India" data-tags="mse metropolitan stock exchange sme">
+                                    <a href="https://www.msei.in/" target="_blank" 
+                                       class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4 link-card">
+                                        <i class="bi bi-graph-down fs-1 mb-3 text-primary"></i>
+                                        <div class="fw-bold fs-6 mb-1">MSE India</div>
+                                        <small class="text-muted text-center">Stock Exchange</small>
+                                        <div class="mt-2">
+                                            <i class="bi bi-box-arrow-up-right text-primary"></i>
+                                        </div>
+                                    </a>
+                                </div>
+        
+                               
+                            </div>
+        
+                            <!-- No Results Message -->
+                            <div id="noResultsMessage" class="text-center py-5 d-none">
+                                <i class="bi bi-search fs-1 text-muted mb-3"></i>
+                                <h5 class="text-muted">No links found</h5>
+                                <p class="text-muted">Try searching with different keywords or clear the search to see all links.</p>
+                                <button class="btn btn-outline-primary" onclick="clearSearch()">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Show All Links
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mt-3">
+        
+                    <!-- Footer -->
+                    <div class="card-footer bg-light text-center py-2">
                         <small class="text-muted">
                             <i class="bi bi-info-circle me-1"></i>
-                            Enter quantity and price for each trade to calculate your average buy price.
-                           
+                            All links open in new tabs for convenient access while using tools
                         </small>
                     </div>
                 </div>
             </div>
-            <div class="alert alert-primary mt-5">
-                Use this to calculate the weighted average of stock.Or expected buy average
-                for example:
-                If you hold <b>100 qty</b> of stock at <b>₹90</b>, 
-                what will be your new buy average if you purchase an additional 
-                <b>50 qty</b> of the same stock at <b>₹70</b>?
-            </div>
-    </section>
-
-    <!-- Stock Split & Bonus Calculator -->
-       
-         
-        <section id="splitbonus-section" class="content-section" style="display: none;">
-        
-       
-        
-
-            <!-- Corporate Action Selection -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="bi bi-gear me-2"></i>Select Corporate Action
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="splitAction" onchange="toggleActionInputs()">
-                                        <label class="form-check-label fw-bold" for="splitAction">
-                                            <i class="bi bi-scissors me-1 text-primary"></i>Stock Split
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-check-inline ms-4">
-                                        <input class="form-check-input" type="checkbox" id="bonusAction" onchange="toggleActionInputs()">
-                                        <label class="form-check-label fw-bold" for="bonusAction">
-                                            <i class="bi bi-gift me-1 text-success"></i>Bonus Issue
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <small class="text-muted">
-                                        <i class="bi bi-info-circle me-1"></i>
-                                        You can select one or both corporate actions to calculate combined effect
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    
-            <!-- Input Parameters -->
-            <div class="row mb-4">
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="card-title mb-0">
-                                <i class="bi bi-basket me-2"></i>Current Holdings
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <label for="currentQty" class="form-label">Current Quantity</label>
-                            <input type="number" class="form-control mb-2" id="currentQty" placeholder="Enter current shares" min="1" step="1" onchange="calculateSplitBonus()">
-                            <label for="currentPrice" class="form-label mt-2">Current Price (per share)</label>
-                            <input type="number" class="form-control" id="currentPrice" placeholder="Enter price per share" min="0.01" step="0.01" onchange="calculateSplitBonus()">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4" id="splitRatioCard" style="display: none;">
-                    <div class="card border-primary">
-                        <div class="card-header bg-primary text-white">
-                            <h6 class="card-title mb-0">
-                                <i class="bi bi-scissors me-2"></i>Split Ratio
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <label for="splitRatio" class="form-label">Split Ratio (New:Old)</label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" id="splitRatioNew" placeholder="2" min="1" step="1" onchange="calculateSplitBonus()">
-                                <span class="input-group-text">:</span>
-                                <input type="number" class="form-control" id="splitRatioOld" placeholder="1" min="1" step="1" onchange="calculateSplitBonus()">
-                            </div>
-                            <small class="text-muted">Example: 2:1 means 2 new shares for 1 old share</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4" id="bonusRatioCard" style="display: none;">
-                    <div class="card border-success">
-                        <div class="card-header bg-success text-white">
-                            <h6 class="card-title mb-0">
-                                <i class="bi bi-gift me-2"></i>Bonus Ratio
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <label for="bonusRatio" class="form-label">Bonus Ratio (Free:Held)</label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" id="bonusRatioFree" placeholder="1" min="1" step="1" onchange="calculateSplitBonus()">
-                                <span class="input-group-text">:</span>
-                                <input type="number" class="form-control" id="bonusRatioHeld" placeholder="2" min="1" step="1" onchange="calculateSplitBonus()">
-                            </div>
-                            <small class="text-muted">Example: 1:2 means 1 free share for 2 held shares</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    
-            <!-- Stats Cards -->
-
-            <!-- Result Section -->
-            <div class="row mb-3" id="resultSection" style="display: none;">
-                <div class="col-12">
-                    <div class="card mb-2">
-                        <div class="card-body py-2">
-                            <div class="d-flex justify-content-between align-items-center flex-wrap w-100 mb-2" style="gap: 0;">
-                                <div class="flex-fill text-center">
-                                    <span class="badge bg-success fs-6">
-                                        <i class="bi bi-arrow-up-circle me-1"></i>
-                                        <span id="finalQuantity">0</span>
-                                    </span>
-                                    <small class="d-block text-muted">Final Quantity</small>
-                                </div>
-                                <div class="flex-fill text-center">
-                                    <span class="badge bg-primary fs-6">
-                                        <i class="bi bi-plus-circle me-1"></i>
-                                        <span id="addedShares">0</span>
-                                    </span>
-                                    <small class="d-block text-muted">Added Shares</small>
-                                </div>
-                                <div class="flex-fill text-center">
-                                    <span class="badge bg-warning fs-6">
-                                        <i class="bi bi-percent me-1"></i>
-                                        <span id="increasePercent">0%</span>
-                                    </span>
-                                    <small class="d-block text-muted">Increase</small>
-                                </div>
-                                <div class="flex-fill text-center">
-                                    <span class="badge bg-info fs-6">
-                                        <i class="bi bi-x me-1"></i>
-                                        <span id="multiplier">1.00x</span>
-                                    </span>
-                                    <small class="d-block text-muted">Multiplier</small>
-                                </div>
-                                <div class="flex-fill text-center">
-                                    <span class="badge bg-dark fs-6">
-                                        <i class="bi bi-currency-rupee me-1"></i>
-                                        <span id="finalPrice">0.00</span>
-                                    </span>
-                                    <small class="d-block text-muted">Final Per Share Price</small>
-                                </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
-    
-            <!-- Trades Breakdown -->
-            <div class="card" id="tradesBreakdown" style="display: none;">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">
-                        <i class="bi bi-table me-2"></i>Trades Breakdown
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th width="10%">#</th>
-                                    <th width="25%">Trade Type</th>
-                                    <th width="20%">Quantity</th>
-                                    <th width="20%">Action</th>
-                                    <th width="25%">Description</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tradesBreakdownBody">
-                                <!-- Dynamic content will be inserted here -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="mt-3">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6 class="text-primary">Calculation Details:</h6>
-                                <div id="calculationDetails">
-                                    <!-- Calculation steps will be shown here -->
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <h6 class="text-success">Corporate Action Summary:</h6>
-                                <div id="actionSummary">
-                                    <!-- Action summary will be shown here -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-          
         </section>
-        <!-- IFSC Code Validator & Bank Details -->
-        <section id="ifsc-section" class="content-section" style="display: none;">
-            <h2 class="mb-4">
-                <i class="bi bi-bank me-2"></i>IFSC Code Validator
-                <button class="btn btn-outline-secondary btn-sm ms-3" onclick="clearIFSCForm()">
-                    <i class="bi bi-arrow-clockwise me-1"></i>Clear
-                </button>
-            </h2>
+        
+        
 
-            <!-- IFSC Input Section -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="bi bi-search me-2"></i>Enter IFSC Code
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="input-group input-group-lg">
-                                        <span class="input-group-text">
-                                            <i class="bi bi-bank2"></i>
-                                        </span>
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            id="ifscInput"
-                                            placeholder="Enter IFSC Code (e.g., SBIN0001234)"
-                                            maxlength="11"
-                                            style="text-transform: uppercase;"
-                                            oninput="handleIFSCInput()"
-                                            onpaste="setTimeout(handleIFSCInput, 10)"
-                                        >
-                                        <button
-                                            class="btn btn-primary"
-                                            type="button"
-                                            onclick="validateIFSC()"
-                                            id="validateBtn"
-                                        >
-                                            <i class="bi bi-search me-1"></i>Validate
-                                        </button>
-                                    </div>
-                                    <div class="form-text">
-                                        <i class="bi bi-info-circle me-1"></i>
-                                        IFSC codes are 11 characters long (4 letters + 1 zero + 6 digits)
-                                    </div>
+
+
+
+
+
+        <section id="rssfeeds-section" class="content-section" style="display: none;">
+            <div class="row"><div class="col-12">
+              <div class="card"><div class="card-body">
+                <div class="row" id="quick-links-container"></div>
+              </div></div></div></div>
+          </section>
+        
+
+        <!-- ==================== CSV FILTER SECTION ==================== -->
+
+        <section id="csvfilter-section" class="content-section" style="display: none;">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <!-- Header -->
+                    <div class="card-header bg-primary text-white py-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="mb-1">
+                                    <i class="bi bi-filetype-csv fs-3 me-3"></i>CSV Column Comparator
+                                </h4>
+                                <p class="mb-0 opacity-75">Compare columns between two CSV files to find unique and common values</p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-light text-primary fw-bold" id="fileStatusBadge">No files loaded</span>
+                                    <span class="badge bg-light text-dark d-none" id="comparisonBadge">0 compared</span>
                                 </div>
-                                <div class="col-md-4 d-flex align-items-center">
-                                    <div id="validationStatus" class="text-center w-100">
-                                        <small class="text-muted">Enter IFSC code to validate</small>
-                                    </div>
-                                </div>
+                                <button class="btn btn-light btn-sm px-3" onclick="resetCsvFilter()">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Reset
+                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Auto-correction Suggestions -->
-            <div class="row mb-4" id="suggestionsSection" style="display: none;">
-                <div class="col-12">
-                    <div class="alert alert-warning">
-                        <h6 class="alert-heading">
-                            <i class="bi bi-exclamation-triangle me-2"></i>Possible Corrections Found
-                        </h6>
-                        <p class="mb-2">The IFSC code you entered might have some common errors. Try these corrections:</p>
-                        <div id="suggestionsList" class="d-flex flex-wrap gap-2">
-                            <!-- Suggestions will be dynamically added here -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Loading Section -->
-            <div class="row mb-4" id="loadingSection" style="display: none;">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body text-center py-4">
-                            <div class="spinner-border text-primary mb-3" role="status"></div>
-                            <h5>Validating IFSC Code...</h5>
-                            <p class="text-muted mb-0">Please wait while we fetch bank details</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bank Details Section -->
-            <div class="row mb-4" id="bankDetailsSection" style="display: none;">
-                <div class="col-12">
-                    <div class="card border-success">
-                        <div class="card-header bg-success text-white">
-                            <h5 class="card-title mb-0">
-                                <i class="bi bi-check-circle me-2"></i>Bank Details Found
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <!-- Bank Summary Cards -->
-                            <div class="row mb-4">
-                                <div class="col-md-3">
-                                    <div class="card bg-primary text-white">
-                                        <div class="card-body text-center py-3">
-                                            <i class="bi bi-building" style="font-size: 1.5rem;"></i>
-                                            <h6 class="mt-2 mb-0" id="bankName">Bank Name</h6>
-                                            <small>Bank</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="card bg-info text-white">
-                                        <div class="card-body text-center py-3">
-                                            <i class="bi bi-geo-alt" style="font-size: 1.5rem;"></i>
-                                            <h6 class="mt-2 mb-0" id="branchName">Branch</h6>
-                                            <small>Branch</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="card bg-warning text-white">
-                                        <div class="card-body text-center py-3">
-                                            <i class="bi bi-pin-map" style="font-size: 1.5rem;"></i>
-                                            <h6 class="mt-2 mb-0" id="cityName">City</h6>
-                                            <small>City</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="card bg-success text-white">
-                                        <div class="card-body text-center py-3">
-                                            <i class="bi bi-map" style="font-size: 1.5rem;"></i>
-                                            <h6 class="mt-2 mb-0" id="stateName">State</h6>
-                                            <small>State</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Detailed Information -->
-                            <div class="row">
+        
+                    <!-- Main Content -->
+                    <div class="card-body p-0">
+                        
+                        <!-- File Upload Section -->
+                        <div class="border-bottom bg-light p-4">
+                            <h6 class="text-secondary mb-3">
+                                <i class="bi bi-cloud-upload me-2"></i>Upload CSV Files for Comparison
+                            </h6>
+                            
+                            <div class="row g-4">
+                                <!-- First CSV File Upload -->
                                 <div class="col-md-6">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h6 class="mb-0">
-                                                <i class="bi bi-info-circle me-2"></i>Bank Information
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <label for="csvFile1" class="form-label fw-semibold">
+                                            <i class="bi bi-file-earmark-csv text-primary me-2"></i>First CSV File
+                                        </label>
+                                        <input type="file" class="form-control mb-2" id="csvFile1" accept=".csv" onchange="handleFileUpload(1)">
+                                        <div id="file1Status" class="small text-muted">
+                                            <i class="bi bi-info-circle me-1"></i>No file selected
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Second CSV File Upload -->
+                                <div class="col-md-6">
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <label for="csvFile2" class="form-label fw-semibold">
+                                            <i class="bi bi-file-earmark-csv text-success me-2"></i>Second CSV File
+                                        </label>
+                                        <input type="file" class="form-control mb-2" id="csvFile2" accept=".csv" onchange="handleFileUpload(2)">
+                                        <div id="file2Status" class="small text-muted">
+                                            <i class="bi bi-info-circle me-1"></i>No file selected
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Column Selection Section -->
+                        <div class="border-bottom bg-light p-4" id="columnSelectionSection" style="display: none;">
+                            <h6 class="text-secondary mb-3">
+                                <i class="bi bi-columns me-2"></i>Select Columns to Compare
+                            </h6>
+                            
+                            <div class="row g-4">
+                                <!-- First CSV Column Selection -->
+                                <div class="col-md-6">
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <label for="column1Dropdown" class="form-label fw-semibold">Column from First CSV</label>
+                                        <select class="form-select" id="column1Dropdown" onchange="generateUniqueValues()">
+                                            <option value="">Select a column...</option>
+                                        </select>
+                                        <small class="text-muted mt-1">Choose which column to compare from the first file</small>
+                                    </div>
+                                </div>
+                                
+                                <!-- Second CSV Column Selection -->
+                                <div class="col-md-6">
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <label for="column2Dropdown" class="form-label fw-semibold">Column from Second CSV</label>
+                                        <select class="form-select" id="column2Dropdown" onchange="generateUniqueValues()">
+                                            <option value="">Select a column...</option>
+                                        </select>
+                                        <small class="text-muted mt-1">Choose which column to compare from the second file</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Filter Options Section -->
+                        <div class="border-bottom bg-light p-4" id="filterOptionsCard" style="display: none;">
+                            <h6 class="text-secondary mb-3">
+                                <i class="bi bi-funnel me-2"></i>Comparison Options
+                            </h6>
+                            
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" 
+                                                   id="ignorePostfixCheck" onchange="generateUniqueValues()">
+                                            <label class="form-check-label fw-semibold" for="ignorePostfixCheck">
+                                                Fuzzy Matching
+                                            </label>
+                                        </div>
+                                        <small class="text-muted mt-1 d-block">
+                                            Treat values like "ABC" and "ABC-BZ" as matching
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" 
+                                                   id="ignoreIsinCheck" onchange="generateUniqueValues()">
+                                            <label class="form-check-label fw-semibold" for="ignoreIsinCheck">
+                                                Ignore ISINs
+                                            </label>
+                                        </div>
+                                        <small class="text-muted mt-1 d-block">
+                                            Exclude ISIN codes from comparison results
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Comparison Results Section -->
+                        <div class="p-4" id="resultsSection" style="display: none;">
+                            <h6 class="text-success mb-3">
+                                <i class="bi bi-table me-2"></i>Comparison Results
+                                <span class="badge bg-success ms-2" id="resultsBadge">Analysis Complete</span>
+                            </h6>
+                            
+                            <!-- Summary Cards First -->
+                            <div class="row g-3 mb-4">
+                                <!-- Common Values Summary -->
+                                <div class="col-md-4">
+                                    <div class="text-center p-3 bg-success text-white rounded">
+                                        <i class="bi bi-check-circle fs-2 mb-2"></i>
+                                        <div class="fs-4 fw-bold" id="commonCount">0</div>
+                                        <small class="opacity-75">Common Values</small>
+                                    </div>
+                                </div>
+                                
+                                <!-- Unique to File 1 Summary -->
+                                <div class="col-md-4">
+                                    <div class="text-center p-3 bg-warning text-white rounded">
+                                        <i class="bi bi-exclamation-triangle fs-2 mb-2"></i>
+                                        <div class="fs-4 fw-bold" id="uniqueToFile1">0</div>
+                                        <small class="opacity-75">Only in File 1</small>
+                                    </div>
+                                </div>
+                                
+                                <!-- Unique to File 2 Summary -->
+                                <div class="col-md-4">
+                                    <div class="text-center p-3 bg-info text-white rounded">
+                                        <i class="bi bi-info-circle fs-2 mb-2"></i>
+                                        <div class="fs-4 fw-bold" id="uniqueToFile2">0</div>
+                                        <small class="opacity-75">Only in File 2</small>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <!-- Detailed Results Tables -->
+                            <div class="row g-4">
+                                <!-- Unique to File 1 -->
+                                <div class="col-md-6">
+                                    <div class="border rounded-3 bg-white">
+                                        <div class="bg-warning bg-opacity-10 p-3 border-bottom">
+                                            <h6 class="text-warning mb-0" id="file1ResultHeader">
+                                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                                Only in File 1
                                             </h6>
                                         </div>
-                                        <div class="card-body">
-                                            <table class="table table-sm">
+                                        <div class="table-responsive" style="max-height: 400px;">
+                                            <table class="table table-hover mb-0">
+                                                <thead class="table-dark sticky-top">
+                                                    <tr>
+                                                        <th width="15%" class="text-center">#</th>
+                                                        <th>Exclusive Values</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="uniqueValues1">
+                                                    <tr>
+                                                        <td colspan="2" class="text-center p-4 text-muted">
+                                                            <i class="bi bi-search fs-3 mb-2"></i>
+                                                            <p class="mb-0">No unique values found</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="p-2 bg-light border-top text-center">
+                                            <small class="text-muted">
+                                                Values only in File 1: <span id="count1" class="fw-bold text-warning">0</span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Unique to File 2 -->
+                                <div class="col-md-6">
+                                    <div class="border rounded-3 bg-white">
+                                        <div class="bg-info bg-opacity-10 p-3 border-bottom">
+                                            <h6 class="text-info mb-0" id="file2ResultHeader">
+                                                <i class="bi bi-info-circle me-2"></i>
+                                                Only in File 2
+                                            </h6>
+                                        </div>
+                                        <div class="table-responsive" style="max-height: 400px;">
+                                            <table class="table table-hover mb-0">
+                                                <thead class="table-dark sticky-top">
+                                                    <tr>
+                                                        <th width="15%" class="text-center">#</th>
+                                                        <th>Exclusive Values</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="uniqueValues2">
+                                                    <tr>
+                                                        <td colspan="2" class="text-center p-4 text-muted">
+                                                            <i class="bi bi-search fs-3 mb-2"></i>
+                                                            <p class="mb-0">No unique values found</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="p-2 bg-light border-top text-center">
+                                            <small class="text-muted">
+                                                Values only in File 2: <span id="count2" class="fw-bold text-info">0</span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <!-- Export Options -->
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <div class="border rounded-3 p-3 bg-light text-center">
+                                        <h6 class="text-secondary mb-3">
+                                            <i class="bi bi-download me-2"></i>Export Results
+                                        </h6>
+                                        <div class="btn-group">
+                                            <button class="btn btn-outline-success" onclick="exportCommonValues()">
+                                                <i class="bi bi-check-circle me-1"></i>Export Common
+                                            </button>
+                                            <button class="btn btn-outline-warning" onclick="exportUniqueFile1()">
+                                                <i class="bi bi-file-earmark me-1"></i>Export File 1 Unique
+                                            </button>
+                                            <button class="btn btn-outline-info" onclick="exportUniqueFile2()">
+                                                <i class="bi bi-file-earmark me-1"></i>Export File 2 Unique
+                                            </button>
+                                            <button class="btn btn-outline-primary" onclick="exportAllResults()">
+                                                <i class="bi bi-files me-1"></i>Export All
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Footer -->
+                    <div class="card-footer bg-light text-center py-2">
+                        <small class="text-muted">
+                            <i class="bi bi-shield-check me-1"></i>
+                            All CSV processing is done locally - your data never leaves your browser
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+      
+
+        <!-- ==================== TRADEWISE CALCULATOR SECTION ==================== -->
+        <section id="tradewise-section" class="content-section" style="display: none;">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <!-- Header -->
+                    <div class="card-header bg-primary text-white py-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="mb-1">
+                                    <i class="bi bi-bar-chart-steps fs-3 me-3"></i>TradeWise Calculator
+                                </h4>
+                                <p class="mb-0 opacity-75">Calulate Buy Avg and qty with mulitiline trades with Split and Bonus</p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-light text-primary fw-bold" id="transactionsBadge">0 transactions</span>
+                                    <span class="badge bg-light text-dark" id="holdingsBadge">0 holdings</span>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-light btn-sm px-3" onclick="resetSplitBonusPro()">
+                                        <i class="bi bi-arrow-clockwise me-1"></i>Reset
+                                    </button>
+                                    <button class="btn btn-light btn-sm px-3" onclick="exportTransactions()">
+                                        <i class="bi bi-download me-1"></i>Export
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Main Content -->
+                    <div class="card-body p-0">
+                        
+                        <!-- Hotkeys Information -->
+                        <div class="border-bottom bg-light p-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-keyboard me-3 text-muted fs-5"></i>
+                                <div class="d-flex flex-wrap gap-3 align-items-center">
+                                    <small class="text-muted fw-semibold">Quick Keys:</small>
+                                    <span class="badge bg-secondary"><kbd>B</kbd> Add Buy</span>
+                                    <span class="badge bg-secondary"><kbd>S</kbd> Add Sell</span>
+                                    <span class="badge bg-secondary"><kbd>Ctrl+L</kbd> Load Sample</span>
+                                    <span class="badge bg-secondary"><kbd>Ctrl+R</kbd> Reset</span>
+                                    <span class="badge bg-secondary"><kbd>Ctrl+E</kbd> Export</span>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Transaction Action Buttons -->
+                        <div class="border-bottom bg-light p-3">
+                            <h6 class="text-secondary mb-3">
+                                <i class="bi bi-plus-square me-2"></i>Add New Transaction
+                            </h6>
+                            
+                            <div class="row g-2">
+                                <div class="col-md-3 col-sm-6">
+                                    <button class="btn btn-primary w-100 d-flex align-items-center justify-content-center" onclick="addTransaction('BUY')">
+                                        <i class="bi bi-cart-plus me-2"></i>
+                                        <div>
+                                            <div class="fw-bold">Add Buy</div>
+                                            <small class="opacity-75">Purchase shares</small>
+                                        </div>
+                                    </button>
+                                </div>
+                                
+                                <div class="col-md-3 col-sm-6">
+                                    <button class="btn btn-danger w-100 d-flex align-items-center justify-content-center" onclick="addTransaction('SELL')">
+                                        <i class="bi bi-cart-dash me-2"></i>
+                                        <div>
+                                            <div class="fw-bold">Add Sell</div>
+                                            <small class="opacity-75">Sell shares</small>
+                                        </div>
+                                    </button>
+                                </div>
+                                
+                                <div class="col-md-3 col-sm-6">
+                                    <button class="btn btn-secondary w-100 d-flex align-items-center justify-content-center" onclick="addTransaction('SPLIT')">
+                                        <i class="bi bi-scissors me-2"></i>
+                                        <div>
+                                            <div class="fw-bold">Add Split</div>
+                                            <small class="opacity-75">Stock split</small>
+                                        </div>
+                                    </button>
+                                </div>
+                                
+                                <div class="col-md-3 col-sm-6">
+                                    <button class="btn btn-success w-100 d-flex align-items-center justify-content-center" onclick="addTransaction('BONUS')">
+                                        <i class="bi bi-gift me-2"></i>
+                                        <div>
+                                            <div class="fw-bold">Add Bonus</div>
+                                            <small class="opacity-75">Bonus shares</small>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Enhanced Status Panel (Sticky) with 6 Important Metrics -->
+                        <!-- Status Panel (Sticky) with better spacing -->
+<div class="border-bottom bg-white p-3 shadow-sm" id="tradewiseStatusPanel" 
+style="position: sticky; top: 0; z-index: 1000; margin-bottom: 0;">
+<h6 class="text-secondary mb-3">
+   <i class="bi bi-speedometer2 me-2"></i>Portfolio Status 
+</h6>
+
+<div class="row g-2" id="statusCards">
+   <!-- Total Acquired -->
+   <div class="col-xl-2 col-lg-4 col-md-6 col-sm-6">
+       <div class="text-center p-2 bg-primary text-white rounded">
+           <i class="bi bi-cart-plus fs-6 mb-1"></i>
+           <div class="fw-bold small" id="totalAcquiredStatus">0</div>
+           <small class="opacity-75" style="font-size: 0.65rem;">Total Acquired</small>
+       </div>
+   </div>
+   
+   <!-- Total Sold -->
+   <div class="col-xl-2 col-lg-4 col-md-6 col-sm-6">
+       <div class="text-center p-2 bg-danger text-white rounded">
+           <i class="bi bi-cart-dash fs-6 mb-1"></i>
+           <div class="fw-bold small" id="totalSoldStatus">0</div>
+           <small class="opacity-75" style="font-size: 0.65rem;">Total Sold</small>
+       </div>
+   </div>
+   
+   <!-- Current Holdings -->
+   <div class="col-xl-2 col-lg-4 col-md-6 col-sm-6">
+       <div class="text-center p-2 bg-success text-white rounded">
+           <i class="bi bi-box fs-6 mb-1"></i>
+           <div class="fw-bold small" id="currentHoldingsStatus">0</div>
+           <small class="opacity-75" style="font-size: 0.65rem;">Holdings</small>
+       </div>
+   </div>
+   
+   <!-- FIFO Buy Average -->
+   <div class="col-xl-2 col-lg-4 col-md-6 col-sm-6">
+       <div class="text-center p-2 bg-info text-white rounded">
+           <i class="bi bi-calculator fs-6 mb-1"></i>
+           <div class="fw-bold small" id="buyAverageStatus">₹0.00</div>
+           <small class="opacity-75" style="font-size: 0.65rem;"> Buy Avg</small>
+       </div>
+   </div>
+   
+   <!-- Realized P&L -->
+   <div class="col-xl-2 col-lg-4 col-md-6 col-sm-6">
+       <div class="text-center p-2 bg-warning text-white rounded">
+           <i class="bi bi-graph-up fs-6 mb-1"></i>
+           <div class="fw-bold small" id="realizedPnlStatus">₹0</div>
+           <small class="opacity-75" style="font-size: 0.65rem;">Realized P&L</small>
+       </div>
+   </div>
+   
+   <!-- Total Invested -->
+   <div class="col-xl-2 col-lg-4 col-md-6 col-sm-6">
+       <div class="text-center p-2 bg-dark text-white rounded">
+           <i class="bi bi-cash-stack fs-6 mb-1"></i>
+           <div class="fw-bold small" id="totalInvestedStatus">₹0</div>
+           <small class="opacity-75" style="font-size: 0.65rem;">Invested</small>
+       </div>
+   </div>
+</div>
+</div>
+
+<!-- Transactions History Table with proper spacing -->
+<div class="p-4" style="padding-top: 1.5rem !important;">
+<h6 class="text-secondary mb-3">
+   <i class="bi bi-table me-2"></i>Transaction History
+   <span class="badge bg-secondary ms-2" id="transactionCountBadge">0 transactions</span>
+</h6>
+
+<div class="border rounded-3 bg-white">
+   <div class="table-responsive">
+       <table class="table table-hover mb-0">
+           <thead class="table-dark">
+               <tr>
+                   <th width="4%" class="text-center">#</th>
+                   <th width="8%">Type</th>
+                   <th width="15%">Qty/Ratio</th>
+                   <th width="12%" class="text-end">Price</th>
+                   <th width="12%" class="text-end">Amount</th>
+                   <th width="12%" class="text-end">P&L</th>
+                   <th width="10%" class="text-center">Holdings</th>
+                   <th width="20%">Details</th>
+                   <th width="7%" class="text-center">Actions</th>
+               </tr>
+           </thead>
+           <tbody id="transactionsTable">
+               <tr>
+                   <td colspan="9" class="text-center p-5 text-muted">
+                       <i class="bi bi-plus-circle fs-1 mb-3"></i>
+                       <p class="mb-0">No transactions yet. Click "Add Buy" to start tracking your portfolio.</p>
+                   </td>
+               </tr>
+           </tbody>
+       </table>
+   </div>
+</div>
+</div>
+
+        
+                        
+        
+                        <!-- Enhanced P&L Summary Card -->
+                        <div class="border-top p-4" id="pnlSummary" style="display: none;">
+                            <h6 class="text-success mb-3">
+                                <i class="bi bi-graph-up me-2"></i>Summary
+                            
+                            <div class="row g-4">
+                                <!-- Total Realized P&L -->
+                                <div class="col-md-3">
+                                    <div class="border rounded-3 p-4 text-center bg-success bg-opacity-10">
+                                        <i class="bi bi-currency-rupee text-success fs-2 mb-3"></i>
+                                        <div class="fs-3 fw-bold text-success" id="totalPnl">₹0.00</div>
+                                        <div class="text-muted">Total Realized P&L</div>
+                                        <small class="text-success">Profit from completed trades</small>
+                                    </div>
+                                </div>
+                                
+                                <!-- FIFO Buy Average -->
+                                <div class="col-md-3">
+                                    <div class="border rounded-3 p-4 text-center bg-info bg-opacity-10">
+                                        <i class="bi bi-calculator text-info fs-2 mb-3"></i>
+                                        <div class="fs-3 fw-bold text-info" id="fifoAverage">₹0.00</div>
+                                        <div class="text-muted">Buy Average</div>
+                                        <small class="text-info">Weighted average of holdings</small>
+                                    </div>
+                                </div>
+                                
+                                <!-- Total Invested -->
+                                <div class="col-md-3">
+                                    <div class="border rounded-3 p-4 text-center bg-primary bg-opacity-10">
+                                        <i class="bi bi-piggy-bank text-primary fs-2 mb-3"></i>
+                                        <div class="fs-3 fw-bold text-primary" id="totalInvested">₹0.00</div>
+                                        <div class="text-muted">Total Invested</div>
+                                        <small class="text-primary">Money in current holdings</small>
+                                    </div>
+                                </div>
+                                
+                                <!-- Current Holdings Value at Buy Average -->
+                                <div class="col-md-3">
+                                    <div class="border rounded-3 p-4 text-center bg-warning bg-opacity-10">
+                                        <i class="bi bi-briefcase-fill text-warning fs-2 mb-3"></i>
+                                        <div class="fs-3 fw-bold text-warning" id="currentValue">₹0.00</div>
+                                        <div class="text-muted">Holdings Value</div>
+                                        <small class="text-warning">Current qty × buy avg</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Footer -->
+                    <div class="card-footer bg-light text-center py-2">
+                        <small class="text-muted">
+                            <i class="bi bi-calculator me-1"></i>
+                            In few edge cases might give inccorect buy avg rounding off error 
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+
+        <!-- ==================== IFSC CODE VALIDATOR SECTION ==================== -->
+        <section id="ifsc-section" class="content-section" style="display: none;">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <!-- Header -->
+                    <div class="card-header bg-primary text-white py-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="mb-1">
+                                    <i class="bi bi-bank fs-3 me-3"></i>IFSC Code Validator
+                                </h4>
+                                <p class="mb-0 opacity-75">Validate IFSC codes and get complete bank branch details</p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-light text-primary fw-bold" id="statusBadge">Ready to Validate</span>
+                                </div>
+                                <button class="btn btn-light btn-sm px-3" onclick="clearIFSCForm()">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Main Content -->
+                    <div class="card-body p-0">
+                        
+                        <!-- Input Section -->
+                        <div class="border-bottom bg-light p-4">
+                            <h6 class="text-secondary mb-3">
+                                <i class="bi bi-search me-2"></i>Enter IFSC Code for Validation
+                            </h6>
+                            
+                            <div class="row g-4">
+                                <!-- IFSC Input Field -->
+                                <div class="col-md-8">
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <label for="ifscInput" class="form-label fw-semibold">IFSC Code</label>
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-text bg-primary text-white">
+                                                <i class="bi bi-bank2"></i>
+                                            </span>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="ifscInput"
+                                                placeholder="Enter IFSC Code (e.g., SBIN0001234)"
+                                                maxlength="11"
+                                                style="text-transform: uppercase;"
+                                                oninput="handleIFSCInput()"
+                                                onpaste="setTimeout(handleIFSCInput, 10)"
+                                            >
+                                            <button
+                                                class="btn btn-success"
+                                                type="button"
+                                                onclick="validateIFSC()"
+                                                id="validateBtn"
+                                            >
+                                                <i class="bi bi-search me-1"></i>Validate
+                                            </button>
+                                        </div>
+                                        <div class="form-text mt-2">
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            IFSC codes are 11 characters long (4 letters + 1 zero + 6 digits)
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Validation Status -->
+                                <div class="col-md-4">
+                                    <div class="border rounded-3 p-3 bg-white h-100 d-flex align-items-center justify-content-center">
+                                        <div id="validationStatus" class="text-center w-100">
+                                            <i class="bi bi-search text-muted fs-2 mb-2"></i>
+                                            <div class="small text-muted">Enter IFSC code to validate</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Auto-correction Suggestions Section -->
+                        <div class="p-4" id="suggestionsSection" style="display: none;">
+                            <div class="border rounded-3 p-3 bg-warning bg-opacity-10 border-warning">
+                                <h6 class="text-warning mb-3">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>Possible Corrections Found
+                                </h6>
+                                <p class="mb-3">The IFSC code you entered might have some common errors. Try these corrections:</p>
+                                <div id="suggestionsList" class="d-flex flex-wrap gap-2">
+                                    <!-- Correction suggestions will be dynamically added here -->
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Loading Section -->
+                        <div class="p-4" id="loadingSection" style="display: none;">
+                            <div class="text-center py-5">
+                                <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
+                                <h5 class="text-primary">Validating IFSC Code...</h5>
+                                <p class="text-muted mb-0">Please wait while we fetch bank details</p>
+                            </div>
+                        </div>
+        
+                        <!-- Bank Details Section -->
+                        <div class="border-top p-4" id="bankDetailsSection" style="display: none;">
+                            <h6 class="text-success mb-3">
+                                <i class="bi bi-check-circle me-2"></i>Bank Details Found
+                            </h6>
+                            
+                            <!-- Bank Summary Cards -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="text-center p-3 bg-primary text-white rounded">
+                                        <i class="bi bi-bank2 fs-2 mb-2"></i>
+                                        <div class="fw-bold" id="bankName">Bank Name</div>
+                                        <small class="opacity-75">Bank</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="text-center p-3 bg-info text-white rounded">
+                                        <i class="bi bi-geo-alt fs-2 mb-2"></i>
+                                        <div class="fw-bold" id="branchName">Branch</div>
+                                        <small class="opacity-75">Branch</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="text-center p-3 bg-warning text-white rounded">
+                                        <i class="bi bi-pin-map fs-2 mb-2"></i>
+                                        <div class="fw-bold" id="cityName">City</div>
+                                        <small class="opacity-75">City</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="text-center p-3 bg-success text-white rounded">
+                                        <i class="bi bi-map fs-2 mb-2"></i>
+                                        <div class="fw-bold" id="stateName">State</div>
+                                        <small class="opacity-75">State</small>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <!-- Detailed Information Tables -->
+                            <div class="row g-4 mb-4">
+                                <!-- Bank Information Table -->
+                                <div class="col-md-6">
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <h6 class="text-primary mb-3">
+                                            <i class="bi bi-info-circle me-2"></i>Bank Information
+                                        </h6>
+                                        <table class="table table-sm mb-0">
+                                            <tbody>
                                                 <tr>
-                                                    <td class="fw-bold">IFSC Code:</td>
-                                                    <td><code id="ifscCode"></code></td>
+                                                    <td class="fw-bold text-muted">IFSC Code:</td>
+                                                    <td><code class="bg-light px-2 py-1 rounded" id="ifscCode"></code></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="fw-bold">Bank Code:</td>
+                                                    <td class="fw-bold text-muted">Bank Code:</td>
                                                     <td><span id="bankCode"></span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="fw-bold">MICR Code:</td>
+                                                    <td class="fw-bold text-muted">MICR Code:</td>
                                                     <td><span id="micrCode"></span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="fw-bold">SWIFT Code:</td>
+                                                    <td class="fw-bold text-muted">SWIFT Code:</td>
                                                     <td><span id="swiftCode"></span></td>
                                                 </tr>
-                                            </table>
-                                        </div>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
+                                
+                                <!-- Address Details Table -->
                                 <div class="col-md-6">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h6 class="mb-0">
-                                                <i class="bi bi-geo me-2"></i>Address Details
-                                            </h6>
-                                        </div>
-                                        <div class="card-body">
-                                            <table class="table table-sm">
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <h6 class="text-primary mb-3">
+                                            <i class="bi bi-geo me-2"></i>Address Details
+                                        </h6>
+                                        <table class="table table-sm mb-0">
+                                            <tbody>
                                                 <tr>
-                                                    <td class="fw-bold">Address:</td>
+                                                    <td class="fw-bold text-muted">Address:</td>
                                                     <td><span id="addressDetails"></span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="fw-bold">District:</td>
+                                                    <td class="fw-bold text-muted">District:</td>
                                                     <td><span id="districtName"></span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="fw-bold">Centre:</td>
+                                                    <td class="fw-bold text-muted">Centre:</td>
                                                     <td><span id="centreName"></span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="fw-bold">Contact:</td>
+                                                    <td class="fw-bold text-muted">Contact:</td>
                                                     <td><span id="contactInfo"></span></td>
                                                 </tr>
-                                            </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <!-- Available Services Section -->
+                            <div class="border rounded-3 p-3 bg-white">
+                                <h6 class="text-primary mb-3">
+                                    <i class="bi bi-credit-card me-2"></i>Available Services
+                                </h6>
+                                <div class="row text-center g-3">
+                                    <!-- RTGS Service -->
+                                    <div class="col-md-3 col-6">
+                                        <div id="rtgsService" class="service-indicator p-3 border rounded">
+                                            <i class="bi bi-arrow-left-right fs-2 mb-2"></i>
+                                            <div class="fw-bold">RTGS</div>
+                                            <small class="text-muted">Real Time Gross Settlement</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- NEFT Service -->
+                                    <div class="col-md-3 col-6">
+                                        <div id="neftService" class="service-indicator p-3 border rounded">
+                                            <i class="bi bi-bank fs-2 mb-2"></i>
+                                            <div class="fw-bold">NEFT</div>
+                                            <small class="text-muted">National Electronic Fund Transfer</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- IMPS Service -->
+                                    <div class="col-md-3 col-6">
+                                        <div id="impsService" class="service-indicator p-3 border rounded">
+                                            <i class="bi bi-lightning fs-2 mb-2"></i>
+                                            <div class="fw-bold">IMPS</div>
+                                            <small class="text-muted">Immediate Payment Service</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- UPI Service -->
+                                    <div class="col-md-3 col-6">
+                                        <div id="upiService" class="service-indicator p-3 border rounded">
+                                            <i class="bi bi-phone fs-2 mb-2"></i>
+                                            <div class="fw-bold">UPI</div>
+                                            <small class="text-muted">Unified Payments Interface</small>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Services Available -->
-                            <div class="row mt-3">
-                                <div class="col-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h6 class="mb-0">
-                                                <i class="bi bi-credit-card me-2"></i>Available Services
-                                            </h6>
+                        </div>
+        
+                        <!-- Error Section -->
+                        <div class="p-4" id="errorSection" style="display: none;">
+                            <div class="border rounded-3 p-3 bg-danger bg-opacity-10 border-danger">
+                                <h6 class="text-danger mb-3">
+                                    <i class="bi bi-exclamation-circle me-2"></i>IFSC Code Not Found
+                                </h6>
+                                <p id="errorMessage" class="mb-0 text-danger">The IFSC code you entered is not valid or doesn't exist.</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Footer -->
+                    <div class="card-footer bg-light py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="bi bi-shield-check me-1"></i>
+                                All validations are performed using secure API endpoints
+                            </small>
+                            <small class="text-muted">
+                                <i class="bi bi-link-45deg me-1"></i>
+                                Data fetched from <a href="https://ifsc.razorpay.com/" target="_blank" class="text-decoration-none">Razorpay IFSC API</a>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        
+        <!-- ==================== MARGIN PENALTY CALCULATOR SECTION ==================== -->
+        <section id="penaltycalc-section" class="content-section" style="display: none;">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <!-- Header -->
+                    <div class="card-header bg-primary text-white py-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="mb-1">
+                                    <i class="bi bi-calculator-fill fs-3 me-3"></i>Margin Penalty Calculator
+                                </h4>
+                                <p class="mb-0 opacity-75">Calculate margin shortfall penalties as per exchange regulations</p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-light text-primary fw-bold" id="statusBadge">Ready to Calculate</span>
+                                </div>
+                                <button class="btn btn-light btn-sm px-3" onclick="resetMarginCalculator()">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Reset
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Main Content -->
+                    <div class="card-body p-0">
+                        
+                        <!-- Input Section -->
+                        <div class="border-bottom bg-light p-4">
+                            <h6 class="text-secondary mb-3">
+                                <i class="bi bi-input-cursor me-2"></i>Enter Margin Details
+                            </h6>
+                            
+                            <div class="row g-4">
+                                <!-- Margin Details Input -->
+                                <div class="col-md-6">
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <h6 class="text-primary mb-3">
+                                            <i class="bi bi-cash-stack me-2"></i>Margin Details
+                                        </h6>
+                                        
+                                        <!-- Required Margin Input -->
+                                        <div class="mb-3">
+                                            <label for="requiredMargin" class="form-label fw-semibold">Required Margin</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-primary text-white">₹</span>
+                                                <input type="number" class="form-control" id="requiredMargin" 
+                                                       placeholder="Enter required margin amount" 
+                                                       min="0" step="0.01" onchange="calculatePenalty()">
+                                            </div>
                                         </div>
-                                        <div class="card-body">
-                                            <div class="row text-center">
-                                                <div class="col-md-2 col-4 mb-2">
-                                                    <div id="rtgsService" class="service-indicator">
-                                                        <i class="bi bi-arrow-left-right fs-4"></i>
-                                                        <div class="fw-bold">RTGS</div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2 col-4 mb-2">
-                                                    <div id="neftService" class="service-indicator">
-                                                        <i class="bi bi-bank fs-4"></i>
-                                                        <div class="fw-bold">NEFT</div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2 col-4 mb-2">
-                                                    <div id="impsService" class="service-indicator">
-                                                        <i class="bi bi-lightning fs-4"></i>
-                                                        <div class="fw-bold">IMPS</div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2 col-4 mb-2">
-                                                    <div id="upiService" class="service-indicator">
-                                                        <i class="bi bi-phone fs-4"></i>
-                                                        <div class="fw-bold">UPI</div>
-                                                    </div>
-                                                </div>
+                                        
+                                        <!-- Available Margin Input -->
+                                        <div class="mb-0">
+                                            <label for="availableMargin" class="form-label fw-semibold">Available Margin</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-success text-white">₹</span>
+                                                <input type="number" class="form-control" id="availableMargin" 
+                                                       placeholder="Enter available margin amount" 
+                                                       min="0" step="0.01" onchange="calculatePenalty()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Additional Penalty Options -->
+                                <div class="col-md-6">
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <h6 class="text-warning mb-3">
+                                            <i class="bi bi-calendar-event me-2"></i>Additional Penalty Options
+                                        </h6>
+                                        
+                                        <div class="form-check p-3 border rounded bg-light">
+                                            <input class="form-check-input" type="checkbox" id="consecutiveDaysCheck" onchange="calculatePenalty()">
+                                            <label class="form-check-label fw-semibold" for="consecutiveDaysCheck">
+                                                Shortfall continues for more than 3 consecutive days
+                                            </label>
+                                            <div class="mt-2">
+                                                <small class="text-muted">
+                                                    <i class="bi bi-info-circle me-1"></i>
+                                                    Additional 5% penalty applies if shortfall persists beyond 3 consecutive days
+                                                </small>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Error Section -->
-            <div class="row mb-4" id="errorSection" style="display: none;">
-                <div class="col-12">
-                    <div class="alert alert-danger">
-                        <h6 class="alert-heading">
-                            <i class="bi bi-exclamation-circle me-2"></i>IFSC Code Not Found
-                        </h6>
-                        <p id="errorMessage" class="mb-0">The IFSC code you entered is not valid or doesn't exist.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="alert alert-primary mb-4" style="max-width: 700px;">
-                The IFSC fetched from <a href="https://ifsc.razorpay.com/" target="_blank">Razorpay</a> api.
-            </div>
-        </section>
         
-        <!-- Margin Penalty Calculator -->
-        <section id="penaltycalc-section" class="content-section" style="display: none;">
-            <h2 class="mb-4">
-                <i class="bi bi-calculator-fill me-2"></i>Margin Penalty Calculator
-                <button class="btn btn-outline-secondary btn-sm ms-3" onclick="resetMarginCalculator()">
-                    <i class="bi bi-arrow-clockwise me-1"></i>Reset
-                </button>
-            </h2>
-            
-            <!-- Input Section -->
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="card-title mb-0">
-                                <i class="bi bi-cash-stack me-2"></i>Margin Details
+                        <!-- Shortfall Summary Section -->
+                        <div class="p-4" id="shortfallSection" style="display: none;">
+                            <h6 class="text-warning mb-3">
+                                <i class="bi bi-exclamation-triangle me-2"></i>Margin Shortfall Analysis
                             </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label for="requiredMargin" class="form-label">Required Margin</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">₹</span>
-                                    <input type="number" class="form-control" id="requiredMargin" 
-                                           placeholder="Enter required margin" 
-                                           min="0" step="0.01" onchange="calculatePenalty()">
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="availableMargin" class="form-label">Available Margin</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">₹</span>
-                                    <input type="number" class="form-control" id="availableMargin" 
-                                           placeholder="Enter available margin" 
-                                           min="0" step="0.01" onchange="calculatePenalty()">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="card-title mb-0">
-                                <i class="bi bi-calendar-event me-2"></i>Additional Penalty
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="consecutiveDaysCheck" onchange="calculatePenalty()">
-                                <label class="form-check-label" for="consecutiveDaysCheck">
-                                    <strong>Shortfall continues for more than 3 consecutive days</strong>
-                                </label>
-                            </div>
-                            <small class="text-muted mt-2 d-block">
-                                <i class="bi bi-info-circle me-1"></i>
-                                Additional 5% penalty applies if shortfall persists beyond 3 consecutive days
-                            </small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
-            <!-- Shortfall Summary -->
-            <div class="row mb-4" id="shortfallSection" style="display: none;">
-                <div class="col-12">
-                    <div class="card border-warning">
-                        <div class="card-header bg-warning text-dark">
-                            <h6 class="card-title mb-0">
-                                <i class="bi bi-exclamation-triangle me-2"></i>Margin Shortfall Detected
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row text-center">
-                                <div class="col-md-4">
-                                    <div class="border rounded p-3">
-                                        <i class="bi bi-arrow-down-circle text-danger fs-3"></i>
-                                        <h5 class="text-danger mt-2">₹<span id="shortfallAmount">0</span></h5>
-                                        <small class="text-muted">Shortfall Amount</small>
+                            
+                            <div class="border rounded-3 p-3 bg-warning bg-opacity-10 border-warning">
+                                <div class="row g-3">
+                                    <!-- Shortfall Amount -->
+                                    <div class="col-md-4">
+                                        <div class="text-center p-3 bg-white rounded border">
+                                            <i class="bi bi-arrow-down-circle text-danger fs-2 mb-2"></i>
+                                            <div class="fs-4 fw-bold text-danger">₹<span id="shortfallAmount">0</span></div>
+                                            <small class="text-muted">Shortfall Amount</small>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="border rounded p-3">
-                                        <i class="bi bi-percent text-warning fs-3"></i>
-                                        <h5 class="text-warning mt-2"><span id="shortfallPercentage">0</span>%</h5>
-                                        <small class="text-muted">of Required Margin</small>
+                                    
+                                    <!-- Shortfall Percentage -->
+                                    <div class="col-md-4">
+                                        <div class="text-center p-3 bg-white rounded border">
+                                            <i class="bi bi-percent text-warning fs-2 mb-2"></i>
+                                            <div class="fs-4 fw-bold text-warning"><span id="shortfallPercentage">0</span>%</div>
+                                            <small class="text-muted">of Required Margin</small>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="border rounded p-3" id="consecutiveIndicator">
-                                        <i class="bi bi-calendar-x text-muted fs-3"></i>
-                                        <h6 class="text-muted mt-2">No Extended Penalty</h6>
-                                        <small class="text-muted">≤ 3 Days</small>
+                                    
+                                    <!-- Consecutive Days Indicator -->
+                                    <div class="col-md-4">
+                                        <div class="text-center p-3 bg-white rounded border" id="consecutiveIndicator">
+                                            <i class="bi bi-calendar-x text-muted fs-2 mb-2"></i>
+                                            <div class="fs-6 fw-bold text-muted">No Extended Penalty</div>
+                                            <small class="text-muted">≤ 3 Days</small>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
         
-            <!-- Penalty Calculation -->
-            <div class="row mb-4" id="penaltySection" style="display: none;">
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="card-title mb-0">
-                                <i class="bi bi-calculator me-2"></i>Penalty Calculation Breakdown
+                        <!-- Penalty Calculation Section -->
+                        <div class="border-top p-4" id="penaltySection" style="display: none;">
+                            <h6 class="text-danger mb-3">
+                                <i class="bi bi-calculator me-2"></i>Penalty Calculation Results
                             </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-sm">
-                                    <tbody id="penaltyBreakdown">
-                                        <!-- Penalty breakdown will be populated here -->
-                                    </tbody>
-                                </table>
+                            
+                            <div class="row g-4">
+                                <!-- Penalty Breakdown Table -->
+                                <div class="col-md-8">
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <h6 class="text-secondary mb-3">Calculation Breakdown</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm mb-0">
+                                                <tbody id="penaltyBreakdown">
+                                                    <!-- Penalty breakdown will be populated here via JavaScript -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Total Penalty Summary -->
+                                <div class="col-md-4">
+                                    <div class="border rounded-3 border-danger bg-danger bg-opacity-10">
+                                        <div class="bg-danger text-white p-3 rounded-top">
+                                            <h6 class="mb-0 text-center">
+                                                <i class="bi bi-exclamation-triangle me-2"></i>Total Penalty
+                                            </h6>
+                                        </div>
+                                        <div class="p-3">
+                                            <!-- Base Penalty -->
+                                            <div class="text-center mb-3 p-2 bg-white rounded">
+                                                <small class="text-muted d-block">Base Penalty</small>
+                                                <div class="fs-5 fw-bold text-warning">₹<span id="basePenalty">0.00</span></div>
+                                            </div>
+                                            
+                                            <!-- GST Amount -->
+                                            <div class="text-center mb-3 p-2 bg-white rounded">
+                                                <small class="text-muted d-block">GST (18%)</small>
+                                                <div class="fs-5 fw-bold text-info">₹<span id="gstAmount">0.00</span></div>
+                                            </div>
+                                            
+                                            <!-- Final Penalty Amount -->
+                                            <div class="text-center p-3 bg-white rounded border border-danger">
+                                                <small class="text-muted d-block">Final Amount</small>
+                                                <div class="fs-3 fw-bold text-danger">₹<span id="finalPenalty">0.00</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="card border-danger">
-                        <div class="card-header bg-danger text-white text-center">
-                            <h6 class="card-title mb-0">
-                                <i class="bi bi-exclamation-triangle me-2"></i>Total Penalty
-                            </h6>
-                        </div>
-                        <div class="card-body text-center">
-                            <div class="mb-3">
-                                <h6 class="text-muted">Base Penalty</h6>
-                                <h4 class="text-warning">₹<span id="basePenalty">0.00</span></h4>
-                            </div>
-                            <div class="mb-3">
-                                <h6 class="text-muted">GST (18%)</h6>
-                                <h4 class="text-info">₹<span id="gstAmount">0.00</span></h4>
-                            </div>
-                            <hr>
-                            <div>
-                                <h6 class="text-muted">Final Amount</h6>
-                                <h3 class="text-danger fw-bold">₹<span id="finalPenalty">0.00</span></h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         
-            <!-- Penalty Rules Reference -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="card bg-light">
-                        <div class="card-header">
-                            <h6 class="card-title mb-0">
+                        <!-- Penalty Rules Reference -->
+                        <div class="border-top bg-light p-4">
+                            <h6 class="text-secondary mb-3">
                                 <i class="bi bi-info-circle me-2"></i>Penalty Rules Reference
                             </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
+                            
+                            <div class="row g-4">
+                                <!-- Basic Penalty Rates -->
                                 <div class="col-md-6">
-                                    <h6 class="text-primary">Basic Penalty Rates:</h6>
-                                    <ul class="list-unstyled">
-                                        <li><span class="badge bg-success me-2">0.5%</span> if shortfall is &lt; ₹1 lakh AND &lt; 10% of required margin</li>
-                                        <li><span class="badge bg-warning me-2">1.0%</span> if shortfall is ≥ ₹1 lakh OR ≥ 10% of required margin</li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6 class="text-primary">Additional Penalties:</h6>
-                                    <ul class="list-unstyled">
-                                        <li><span class="badge bg-danger me-2">5.0%</span> if shortfall continues for more than 3 consecutive days</li>
-                                        <li><span class="badge bg-info me-2">18%</span> GST on total penalty amount</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- Split & Bonus Pro Section -->
-        <section id="splitbonuspro-section" class="content-section" style="display: none;">
-            <h2 class="mb-4">
-                <i class="bi bi-bar-chart-steps me-2"></i>Split & Bonus Pro
-                <button class="btn btn-outline-secondary btn-sm ms-3" onclick="resetSplitBonusPro()">
-                    <i class="bi bi-arrow-clockwise me-1"></i>Reset
-                </button>
-                
-            </h2>
-           
-        
-            <!-- Action Buttons -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">
-                                <i class="bi bi-plus-square me-2"></i>Add Transaction
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-3 mb-2">
-                                    <button class="btn btn-primary w-100" onclick="addTransaction('BUY')">
-                                        <i class="bi bi-cart-plus me-1"></i>Add Buy
-                                    </button>
-                                </div>
-                                <div class="col-md-3 mb-2">
-                                    <button class="btn btn-danger w-100" onclick="addTransaction('SELL')">
-                                        <i class="bi bi-cart-dash me-1"></i>Add Sell
-                                    </button>
-                                </div>
-                                <div class="col-md-3 mb-2">
-                                    <button class="btn btn-secondary w-100" onclick="addTransaction('SPLIT')">
-                                        <i class="bi bi-scissors me-1"></i>Add Split
-                                    </button>
-                                </div>
-                                <div class="col-md-3 mb-2">
-                                    <button class="btn btn-success w-100" onclick="addTransaction('BONUS')">
-                                        <i class="bi bi-gift me-1"></i>Add Bonus
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
-            <!-- Status Panel -->
-            <div class="row mb-4" id="statusPanel">
-                <!-- Status cards will be populated here -->
-            </div>
-        
-            <!-- Transactions Table -->
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">
-                        <i class="bi bi-table me-2"></i>Transaction History
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th width="5%">#</th>
-                                    <th width="10%">Type</th>
-                                    <th width="15%">Quantity/Ratio</th>
-                                    <th width="12%">Price</th>
-                                    <th width="12%">Holdings</th>
-                                    <th width="12%">Avg Price</th>
-                                    <th width="20%">Details</th>
-                                    <th width="14%">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="transactionsTable">
-                                <!-- Transactions will be populated here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        
-            <!-- Summary Section -->
-            <div class="row mt-4" id="summarySection" style="display: none;">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="card-title mb-0">
-                                <i class="bi bi-graph-up me-2"></i>Portfolio Summary
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h6 class="text-primary">Investment Summary:</h6>
-                                    <div id="investmentSummary">
-                                        <!-- Investment details will be shown here -->
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <h6 class="text-primary mb-3">Basic Penalty Rates</h6>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="badge bg-success me-3">0.5%</span>
+                                            <small>If shortfall is &lt; ₹1 lakh AND &lt; 10% of required margin</small>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-warning me-3">1.0%</span>
+                                            <small>If shortfall is ≥ ₹1 lakh OR ≥ 10% of required margin</small>
+                                        </div>
                                     </div>
                                 </div>
+                                
+                                <!-- Additional Penalties -->
                                 <div class="col-md-6">
-                                    <h6 class="text-success">Corporate Actions Impact:</h6>
-                                    <div id="corporateActionsSummary">
-                                        <!-- Corporate actions summary will be shown here -->
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <h6 class="text-primary mb-3">Additional Penalties</h6>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="badge bg-danger me-3">5.0%</span>
+                                            <small>If shortfall continues for more than 3 consecutive days</small>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-info me-3">18%</span>
+                                            <small>GST on total penalty amount</small>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+        
+                    <!-- Footer -->
+                    <div class="card-footer bg-light text-center py-2">
+                        <small class="text-muted">
+                            <i class="bi bi-shield-check me-1"></i>
+                            Calculations are based on current exchange regulations and processed locally
+                        </small>
+                    </div>
                 </div>
             </div>
-            
         </section>
         
 
-        <!-- Ledger Recon Section -->
+        <!-- ==================== LEDGER RECONCILIATION SECTION ==================== -->
         <section id="ledgerrecon-section" class="content-section" style="display: none;">
-            <div class="alert alert-primary"> </div>
-        </section>
-        
-
-        <!-- About Section -->
-        <section id="about-section" class="content-section" style="display: none;">
-            <h2 class="mb-4">
-                <i class="bi bi-info-circle me-2"></i>About
-            </h2>
-            <div class="card mb-3 aboutcard">
-                <div class="card-body ">
-                    <p>
-                        This utility tool was built by <b>Tahur</b> &#128526; — initially just for fun and for my own use.
-                    <ul>
-                        <li>Yes, you can totally do most of this in Excel, but this tool will save you at least 2 seconds (and likely a few sighs) each time!</li>
-                        <li>Edge cases? Haven’t tested much. If you break it or get a wrong result, please accept my heartfelt ¯\_(ツ)_/¯ .</li>
-                        <li>Most major code chunks were <i>generated by Claude and Cursor</i> , so if something pops, blame the bots &#129302;!</li>
-                        <li>CSV parsing is all thanks to <a href="https://www.papaparse.com/" target="_blank">Papa Parse</a>, and data never passed to any server.</li>
-                        
-                    </ul>
-                    <hr>
-                    <div>
-                        <b>You can view the code on</b> 
-                        <a href="https://github.com/tahurmd/ztools" target="_blank"> <i class="bi bi-github me-2"></i>GitHub</a>.
-                        <br>
-                        <b>Suggestions? Bugs?</b> or Show some love on <a href="mailto:mdtahur@gmail.com">mdtahur@gmail.com</a> or ping me(you know where).
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <!-- Header -->
+                    <div class="card-header bg-primary text-white py-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="mb-1">
+                                    <i class="bi bi-file-spreadsheet fs-3 me-3"></i>Ledger Reconciliation Tool
+                                </h4>
+                                <p class="mb-0 opacity-75">Upload, categorize and analyze your CSV ledger data</p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-light text-primary fw-bold" id="recordsBadge">0 records</span>
+                                    <span class="badge bg-light text-dark px-2" id="categorizedBadge">0 categorized</span>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-light btn-sm px-3" onclick="resetLedgerRecon()">
+                                        <i class="bi bi-arrow-clockwise me-1"></i>Reset
+                                    </button>
+                                    <button class="btn btn-light btn-sm px-3" onclick="exportResults()" disabled id="exportBtn">
+                                        <i class="bi bi-download me-1"></i>Export
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="text-muted mt-3 mb-0" style="font-size:0.95em;">
-                        Have fun, and may your calculations always be correct! &#128522;
+        
+                    <!-- Main Content -->
+                    <div class="card-body p-0">
+                        
+                        <!-- Upload Section -->
+                        <div class="border-bottom bg-light p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0 text-secondary">
+                                    <i class="bi bi-cloud-upload me-2"></i>Upload CSV File
+                                </h6>
+                                <div class="d-flex align-items-center gap-2">
+                                    <small class="text-muted">
+                                        <i class="bi bi-keyboard me-1"></i>Hotkeys:
+                                    </small>
+                                    <span class="badge bg-secondary"><kbd>Ctrl+U</kbd> Upload</span>
+                                    <span class="badge bg-secondary"><kbd>Ctrl+P</kbd> Process</span>
+                                    <span class="badge bg-secondary"><kbd>Ctrl+E</kbd> Export</span>
+                                </div>
+                            </div>
+                            
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <input type="file" id="csvFileInput" accept=".csv" 
+                                           class="form-control" onchange="handleFileSelect(event)"
+                                           placeholder="Choose CSV file...">
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-success w-100" onclick="processCsv()">
+                                        <i class="bi bi-calculator me-1"></i>Process Data
+                                    </button>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-outline-danger w-100" onclick="clearData()">
+                                        <i class="bi bi-trash me-1"></i>Clear All
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Summary Section -->
+                        <div class="p-4" id="summaryCard" style="display: none;">
+                            <h6 class="text-success mb-3">
+                                <i class="bi bi-bar-chart me-2"></i>Summary Report
+                            </h6>
+                            
+                            <div class="row g-4">
+                                <!-- Summary Table -->
+                                <div class="col-md-8">
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm mb-0">
+                                                <tbody id="summaryTable">
+                                                    <!-- Summary data will be populated here -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Key Metrics -->
+                                <div class="col-md-4">
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <div class="border rounded-3 p-3 bg-success text-white text-center">
+                                                <div class="fs-4 fw-bold" id="totalInflow">₹0</div>
+                                                <small class="opacity-75">Total Inflow</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="border rounded-3 p-3 bg-primary text-white text-center">
+                                                <div class="fs-4 fw-bold" id="categorizedCount">0</div>
+                                                <small class="opacity-75">Categorized Records</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Filter Section -->
+                        <div class="border-top border-bottom bg-light p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0 text-secondary">
+                                    <i class="bi bi-funnel me-2"></i>Filter & Search
+                                </h6>
+                                <button class="btn btn-outline-secondary btn-sm" onclick="clearFilters()">
+                                    <i class="bi bi-x-circle me-1"></i>Clear Filters
+                                </button>
+                            </div>
+                            
+                            <div class="row g-2">
+                                <div class="col-md-4">
+                                    <select class="form-select" id="categoryFilter" onchange="applyFilters()">
+                                        <option value="">All Categories</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="searchBox" 
+                                           placeholder="Search particulars..." oninput="applyFilters()">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="date" class="form-control" id="dateFilter" onchange="applyFilters()">
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Detailed Records Section -->
+                        <div class="p-4" id="detailedCard" style="display: none;">
+                            <h6 class="text-secondary mb-3">
+                                <i class="bi bi-table me-2"></i>Detailed Records
+                                <span class="badge bg-secondary ms-2" id="detailedRecordsBadge">0 records</span>
+                            </h6>
+                            
+                            <div class="border rounded-3 bg-white">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead class="table-dark sticky-top">
+                                            <tr>
+                                                <th width="4%" class="text-center">#</th>
+                                                <th width="12%">Date</th>
+                                                <th width="25%">Particulars</th>
+                                                <th width="12%">Voucher Type</th>
+                                                <th width="10%" class="text-end">Debit</th>
+                                                <th width="10%" class="text-end">Credit</th>
+                                                <th width="15%">Category</th>
+                                                <th width="7%" class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="detailedTable">
+                                            <!-- Detailed records will be populated here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Footer -->
+                    <div class="card-footer bg-light text-center py-2">
+                        <small class="text-muted">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Data is processed locally - nothing is sent to external servers
+                        </small>
                     </div>
                 </div>
             </div>
         </section>
+        
+        
+
+        <!-- ==================== ABOUT SECTION ==================== -->
+        <section id="about-section" class="content-section" style="display: none;">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <!-- Header -->
+                    <div class="card-header bg-primary text-white py-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="mb-1">
+                                    <i class="bi bi-info-circle fs-3 me-3"></i>About
+                                </h4>
+                                <p class="mb-0 opacity-75">Support Utility Tool</p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="badge bg-light text-primary fw-bold">v0.5</span>
+                                <a href="https://github.com/tahurmd/ztools" target="_blank" class="btn btn-light btn-sm px-3">
+                                    <i class="bi bi-github me-1"></i>View Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Main Content -->
+                    <div class="card-body p-0">
+                        
+                        <!-- Section 1: About the Project -->
+                        <div class="border-bottom bg-light p-4">
+                        
+                            
+                            <div class="border rounded-3 p-4 bg-white">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                        <i class="bi bi-person-circle fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1"><strong>Z-Tool</strong> 😎</h6>
+                                        <p class="text-muted mb-0">Support Internal Utility</p>
+                                    </div>
+                                </div>
+                                
+                                <p class="mb-3">
+                                    This utility tool was built by <b>Tahur</b> &#128526; — initially just for fun and for my own use. Later tested and improved by my teammates' feedback.
+                                </p>
+                                
+                                <ul>
+                                    <li>Yes, you can totally do most of this in Excel, but this tool will save you at least 2 seconds (and likely a few sighs) each time!</li>
+                                    <li>Edge cases? Haven't tested much. If you break it or get a wrong result, please accept my heartfelt ¯\_(ツ)_/¯.</li>
+                                    <li>Most major code chunks were <i>generated by Claude and Cursor</i>, so if something pops, blame the bots &#129302;!</li>
+                                    <li>All data processing happens locally - nothing goes to servers</li>
+                                    <li>Since the tool was designed for utility first, there are a few design inconsistencies (alignment & color palette, margins, etc.) that will get fixed on a breezy afternoon</li>
+                                    <li>CSV parsing is all thanks to <a href="https://www.papaparse.com/" target="_blank">Papa Parse</a></li>
+                                </ul>
+                            </div>
+                        </div>
+        
+                        <!-- Section 2: Roadmap and Tech Specifications -->
+                        <div class="border-bottom p-4">
+                            <h5 class="text-info mb-4">
+                                <i class="bi bi-map me-2"></i>Roadmap and Tech Specifications
+                            </h5>
+                            
+                            <div class="row g-4">
+                                <!-- Tech Stack -->
+                                <div class="col-md-6">
+                                    <div class="border rounded-3 p-3 bg-white">
+                                        <h6 class="text-primary mb-3">
+                                            <i class="bi bi-gear me-2"></i>Built With
+                                        </h6>
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <div class="text-center p-2 border rounded bg-light">
+                                                    <i class="bi bi-bootstrap fs-3 text-primary mb-2"></i>
+                                                    <div class="small fw-semibold">Bootstrap 5</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="text-center p-2 border rounded bg-light">
+                                                    <i class="bi bi-filetype-js fs-3 text-warning mb-2"></i>
+                                                    <div class="small fw-semibold">Vanilla JS</div>
+                                                    <div class="text-muted small">No frameworks</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="text-center p-2 border rounded bg-light">
+                                                    <i class="bi bi-file-earmark-text fs-3 text-success mb-2"></i>
+                                                    <div class="small fw-semibold">Papa Parse</div>
+                                                    <div class="text-muted small">CSV Processing</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="text-center p-2 border rounded bg-light">
+                                                    <i class="bi bi-rss fs-3 text-info mb-2"></i>
+                                                    <div class="small fw-semibold">RSS Parser</div>
+                                                    <div class="text-muted small">Feed Reading</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Future Plans -->
+                                <div class="col-md-6">
+                                    <div class="border rounded-3 p-3 bg-info bg-opacity-10">
+                                        <h6 class="text-warning mb-3">
+                                            <i class="bi bi-lightbulb me-2"></i>Future Plans
+                                        </h6>
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2">
+                                                <i class="bi bi-gear text-warning me-2"></i>
+                                                All the CONSTANTS are hardcoded; will create a separate config.js file to manage them
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="bi bi-list-ul text-warning me-2"></i>
+                                                An order book summarizer that will sort by time first, then by script
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Section 3: Connect -->
+                        <div class="p-4">
+                            <h5 class="text-secondary mb-4">
+                                <i class="bi bi-envelope me-2"></i>Connect
+                            </h5>
+                            
+                            <div class="border rounded-3 p-4 bg-white">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <a href="https://github.com/tahurmd/ztools" target="_blank" class="btn btn-outline-dark w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3">
+                                            <i class="bi bi-github fs-2 mb-2"></i>
+                                            <div class="fw-semibold">GitHub</div>
+                                            <small class="text-muted">View source code</small>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a href="mailto:mdtahur@gmail.com" class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3">
+                                            <i class="bi bi-envelope fs-2 mb-2"></i>
+                                            <div class="fw-semibold">Email</div>
+                                            <small class="text-muted">Send feedback</small>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button class="btn btn-outline-success w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3" onclick="showAppreciationMessage()">
+                                            <i class="bi bi-heart fs-2 mb-2"></i>
+                                            <div class="fw-semibold">Show Love</div>
+                                            <small class="text-muted">You know where to ping!</small>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Footer Message -->
+                    <div class="card-footer bg-light text-center py-3">
+                        <div class="text-muted">
+                            <i class="bi bi-emoji-smile me-2"></i>
+                            <strong>Have fun, and may your calculations always be correct!</strong> 😊
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        
         
         
     </div>
 
-    <!-- Bootstrap JS -->
+    <!-- ======================== JAVASCRIPT DEPENDENCIES ======================== -->
+    
+    <!-- Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import CONFIG from './config.js';          
+    </script>
+    
+    <!-- Component JavaScript Files -->
     <script src="components/quicklinks.js"></script>
-    <script src="components/csvfilter.js"></script>
-    <script src="components/splitbonus.js"></script>
+    <script src ="components/csvfilter.js" defer></script>
+    <script src="components/rssfeeds.js"></script>
     <script src="components/ifscvalidator.js"></script>
     <script src="components/penaltycalc.js"></script>
-    <script src="components/buyavgcalc.js"></script> 
     <script src="components/splitbonuspro.js"></script>
     <script src="components/ledgerrecon.js"></script>
+    <script src="components/about.js"></script>
+    
+    <!-- Main Application Scripts -->
     <script src="main.js"></script>
     <script src="script.js"></script>
-
 </body>
 </html>
