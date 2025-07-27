@@ -48,7 +48,7 @@ function handleFileSelect(event) {
 }
 
 /**
- * Parse CSV data - Updated to handle header variations
+ * Parse CSV data - Updated to handle all header variations
  */
 function parseCSV(csvText) {
     const lines = csvText.split('\n').filter(line => line.trim());
@@ -74,7 +74,7 @@ function parseCSV(csvText) {
         
         // Check for particulars field (try all possible variations)
         const particulars = row.particulars || row.Particulars || row['particulars'] || row['Particulars'] || 
-                           row.particular || row.Particular || '';
+                           row.particular || row.Particular || row['Particular'] || '';
         
         if (particulars && 
             !particulars.toLowerCase().includes('opening balance') && 
@@ -109,20 +109,26 @@ function processCsv() {
 }
 
 /**
- * Determine category based on voucher type and particulars - Updated for header variations
+ * Determine category based on voucher type and particulars - Updated for all header variations
  */
 function determineCategory(record) {
-    // Try multiple header variations
+    // Try all possible header variations for voucher type
     const voucherType = (record['voucher_type'] || record['Voucher Type'] || 
-                        record['voucher type'] || record['VOUCHER_TYPE'] || '').trim();
+                        record['voucher type'] || record['VOUCHER_TYPE'] || 
+                        record['voucher'] || record['Voucher'] || '').trim();
     
+    // Try all possible header variations for particulars
     const particulars = (record['particulars'] || record['Particulars'] || 
                         record['particular'] || record['Particular'] || '').trim().toLowerCase();
     
-    const debit = parseFloat((record.debit || record.Debit || record.dr || record.Dr || '0')
+    // Try all possible header variations for debit
+    const debit = parseFloat((record.debit || record.Debit || record.dr || record.Dr || 
+                             record.DR || record.DEBIT || '0')
                   .toString().replace(/[₹,\s]/g, '')) || 0;
     
-    const credit = parseFloat((record.credit || record.Credit || record.cr || record.Cr || '0')
+    // Try all possible header variations for credit
+    const credit = parseFloat((record.credit || record.Credit || record.cr || record.Cr || 
+                              record.CR || record.CREDIT || '0')
                    .toString().replace(/[₹,\s]/g, '')) || 0;
     
     // 1. PayIN
@@ -176,8 +182,12 @@ function generateSummary() {
     
     categorizedData.forEach(record => {
         const category = record.category;
-        const debit = parseFloat((record.debit || '0').toString().replace(/[₹,\s]/g, '')) || 0;
-        const credit = parseFloat((record.credit || '0').toString().replace(/[₹,\s]/g, '')) || 0;
+        
+        // Handle header variations for debit/credit in summary
+        const debit = parseFloat((record.debit || record.Debit || record.dr || record.Dr || 
+                                 record.DR || record.DEBIT || '0').toString().replace(/[₹,\s]/g, '')) || 0;
+        const credit = parseFloat((record.credit || record.Credit || record.cr || record.Cr || 
+                                  record.CR || record.CREDIT || '0').toString().replace(/[₹,\s]/g, '')) || 0;
         
         let amount = 0;
         if (category === CATEGORIES.PAYIN || category === CATEGORIES.OTHER_CREDIT) {
@@ -215,7 +225,7 @@ function generateSummary() {
 }
 
 /**
- * Display detailed records table
+ * Display detailed records table - Updated to handle all header variations
  */
 function displayDetailedRecords() {
     const tbody = document.getElementById('detailedTable');
@@ -225,18 +235,34 @@ function displayDetailedRecords() {
         const row = tbody.insertRow();
         const categoryColor = getCategoryColor(record.category);
         
+        // Handle all possible header variations for display
+        const particulars = record.particulars || record.Particulars || record.particular || 
+                           record.Particular || record['Particular'] || '-';
+        
+        const postingDate = record.posting_date || record['Posting Date'] || record['posting date'] || 
+                           record.date || record.Date || record['Date'] || '-';
+        
+        const voucherType = record.voucher_type || record['Voucher Type'] || record['voucher type'] || 
+                           record.voucher || record.Voucher || '-';
+        
+        const debitAmount = record.debit || record.Debit || record.dr || record.Dr || 
+                           record.DR || record.DEBIT || '0';
+        
+        const creditAmount = record.credit || record.Credit || record.cr || record.Cr || 
+                            record.CR || record.CREDIT || '0';
+        
         row.innerHTML = `
             <td>${record.serialNumber}</td>
-            <td>${record.posting_date || '-'}</td>
-            <td style="max-width: 200px;" class="text-truncate" title="${record.particulars}">
-                ${record.particulars || '-'}
+            <td>${postingDate}</td>
+            <td style="max-width: 200px;" class="text-truncate" title="${particulars}">
+                ${particulars}
             </td>
-            <td>${record.voucher_type || '-'}</td>
-            <td class="text-end ${parseFloat(record.debit || 0) > 0 ? 'text-danger' : ''}">
-                ${record.debit && parseFloat(record.debit) > 0 ? '₹' + formatNumber(parseFloat(record.debit)) : '-'}
+            <td>${voucherType}</td>
+            <td class="text-end ${parseFloat(debitAmount || 0) > 0 ? 'text-danger' : ''}">
+                ${debitAmount && parseFloat(debitAmount) > 0 ? '₹' + formatNumber(parseFloat(debitAmount)) : '-'}
             </td>
-            <td class="text-end ${parseFloat(record.credit || 0) > 0 ? 'text-success' : ''}">
-                ${record.credit && parseFloat(record.credit) > 0 ? '₹' + formatNumber(parseFloat(record.credit)) : '-'}
+            <td class="text-end ${parseFloat(creditAmount || 0) > 0 ? 'text-success' : ''}">
+                ${creditAmount && parseFloat(creditAmount) > 0 ? '₹' + formatNumber(parseFloat(creditAmount)) : '-'}
             </td>
             <td>
                 <span class="badge ${categoryColor}">${record.category}</span>
@@ -286,7 +312,7 @@ function setupFilters() {
 }
 
 /**
- * Apply filters to the data
+ * Apply filters to the data - Updated to handle header variations
  */
 function applyFilters() {
     const categoryFilter = document.getElementById('categoryFilter').value;
@@ -295,8 +321,17 @@ function applyFilters() {
     
     filteredData = categorizedData.filter(record => {
         if (categoryFilter && record.category !== categoryFilter) return false;
-        if (searchText && !record.particulars.toLowerCase().includes(searchText)) return false;
-        if (dateFilter && record.posting_date !== dateFilter) return false;
+        
+        // Handle header variations for particulars in search
+        const particulars = (record.particulars || record.Particulars || record.particular || 
+                           record.Particular || record['Particular'] || '').toLowerCase();
+        if (searchText && !particulars.includes(searchText)) return false;
+        
+        // Handle header variations for date in filter
+        const postingDate = record.posting_date || record['Posting Date'] || record['posting date'] || 
+                           record.date || record.Date || record['Date'] || '';
+        if (dateFilter && postingDate !== dateFilter) return false;
+        
         return true;
     });
     
@@ -338,7 +373,7 @@ function resetLedgerRecon() {
 }
 
 /**
- * Export only summary report (not full transactions)
+ * Export only summary report (not full transactions) - Updated to handle header variations
  */
 function exportResults() {
     if (categorizedData.length === 0) {
@@ -354,8 +389,12 @@ function exportResults() {
     
     categorizedData.forEach(record => {
         const category = record.category;
-        const debit = parseFloat((record.debit || '0').toString().replace(/[₹,\s]/g, '')) || 0;
-        const credit = parseFloat((record.credit || '0').toString().replace(/[₹,\s]/g, '')) || 0;
+        
+        // Handle header variations for debit/credit in export
+        const debit = parseFloat((record.debit || record.Debit || record.dr || record.Dr || 
+                                 record.DR || record.DEBIT || '0').toString().replace(/[₹,\s]/g, '')) || 0;
+        const credit = parseFloat((record.credit || record.Credit || record.cr || record.Cr || 
+                                  record.CR || record.CREDIT || '0').toString().replace(/[₹,\s]/g, '')) || 0;
         
         let amount = 0;
         if (category === CATEGORIES.PAYIN || category === CATEGORIES.OTHER_CREDIT) {
@@ -392,12 +431,27 @@ function exportResults() {
 }
 
 /**
- * View individual record details
+ * View individual record details - Updated to handle all header variations
  */
 function viewRecord(serialNumber) {
     const record = categorizedData.find(r => r.serialNumber === serialNumber);
     if (record) {
-        alert(`Record Details:\n\nDate: ${record.posting_date}\nParticulars: ${record.particulars}\nVoucher: ${record.voucher_type}\nDebit: ${record.debit || 'N/A'}\nCredit: ${record.credit || 'N/A'}\nCategory: ${record.category}`);
+        const particulars = record.particulars || record.Particulars || record.particular || 
+                           record.Particular || record['Particular'] || 'N/A';
+        
+        const postingDate = record.posting_date || record['Posting Date'] || record['posting date'] || 
+                           record.date || record.Date || record['Date'] || 'N/A';
+        
+        const voucherType = record.voucher_type || record['Voucher Type'] || record['voucher type'] || 
+                           record.voucher || record.Voucher || 'N/A';
+        
+        const debitAmount = record.debit || record.Debit || record.dr || record.Dr || 
+                           record.DR || record.DEBIT || 'N/A';
+        
+        const creditAmount = record.credit || record.Credit || record.cr || record.Cr || 
+                            record.CR || record.CREDIT || 'N/A';
+        
+        alert(`Record Details:\n\nDate: ${postingDate}\nParticulars: ${particulars}\nVoucher: ${voucherType}\nDebit: ${debitAmount}\nCredit: ${creditAmount}\nCategory: ${record.category}`);
     }
 }
 
@@ -411,4 +465,41 @@ function formatNumber(num) {
     }).format(num);
 }
 
+/**
+ * Keyboard shortcuts handler
+ */
+document.addEventListener('keydown', function(event) {
+    // Only trigger if ledger section is active
+    const ledgerSection = document.getElementById('ledgerrecon-section');
+    if (!ledgerSection || ledgerSection.style.display === 'none') return;
+    
+    if (event.ctrlKey) {
+        switch(event.key.toLowerCase()) {
+            case 'u':
+                event.preventDefault();
+                document.getElementById('csvFileInput').click();
+                break;
+            case 'p':
+                event.preventDefault();
+                processCsv();
+                break;
+            case 'e':
+                event.preventDefault();
+                if (!document.getElementById('exportBtn').disabled) {
+                    exportResults();
+                }
+                break;
+            case 'r':
+                event.preventDefault();
+                resetLedgerRecon();
+                break;
+        }
+    }
+});
 
+/**
+ * Initialize the application
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Ledger Reconciliation Tool initialized');
+});
