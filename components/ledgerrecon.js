@@ -1,47 +1,3 @@
-// Simple column name normalizer for basic matching
-function normalizeColumnName(columnName) {
-    return columnName
-        .toLowerCase()
-        .trim()
-        .replace(/[_\s-]+/g, '') // Remove underscores, spaces, and hyphens
-        .replace(/[^\w]/g, ''); // Remove any non-word characters
-}
-
-// Simple hack to find particular and voucher type columns
-function findColumnHack(headers, targetType) {
-    const normalized = headers.map(h => ({
-        original: h,
-        normalized: normalizeColumnName(h)
-    }));
-    
-    if (targetType === 'particular') {
-        // Look for particular, particulars, description, narration
-        const found = normalized.find(h => 
-            h.normalized.includes('particular') || 
-            h.normalized.includes('description') || 
-            h.normalized.includes('narration') ||
-            h.normalized.includes('details')
-        );
-        return found ? found.original : null;
-    }
-    
-    if (targetType === 'voucher') {
-        // Look for voucher type, voucher_type, type
-        const found = normalized.find(h => 
-            h.normalized.includes('vouchertype') || 
-            h.normalized.includes('type')
-        );
-        return found ? found.original : null;
-    }
-    
-    return null;
-}
-
-
-
-
-
-
 // Global variables
 let csvData = [];
 let categorizedData = [];
@@ -92,34 +48,7 @@ function handleFileSelect(event) {
 }
 
 /**
- * Parse CSV data
- */
-function parseCSV(csvText) {
-    const lines = csvText.split('\n').filter(line => line.trim());
-    if (lines.length === 0) return [];
-    
-    const headers = lines[0].split(',').map(h => h.trim().replace(/['"]/g, ''));
-    const data = [];
-    
-    for (let i = 1; i < lines.length; i++) {
-        const values = lines[i].split(',');
-        const row = {};
-        headers.forEach((header, index) => {
-            row[header] = values[index] ? values[index].trim().replace(/['"]/g, '') : '';
-        });
-        
-        if (row.particulars && 
-            !row.particulars.toLowerCase().includes('opening balance') && 
-            !row.particulars.toLowerCase().includes('closing balance')) {
-            data.push(row);
-        }
-    }
-    
-    return data;
-}
-
-/**
- * Process CSV and categorize data
+ * Parse CSV data - Updated to handle header variations
  */
 function parseCSV(csvText) {
     const lines = csvText.split('\n').filter(line => line.trim());
@@ -158,10 +87,29 @@ function parseCSV(csvText) {
     return data;
 }
 
-
+/**
+ * Process CSV and categorize data
+ */
+function processCsv() {
+    if (csvData.length === 0) {
+        alert('Please upload a CSV file first');
+        return;
+    }
+    
+    categorizedData = csvData.map((record, index) => ({
+        ...record,
+        category: determineCategory(record),
+        serialNumber: index + 1
+    }));
+    
+    filteredData = [...categorizedData];
+    
+    updateResults();
+    document.getElementById('exportBtn').disabled = false;
+}
 
 /**
- * Determine category based on voucher type and particulars
+ * Determine category based on voucher type and particulars - Updated for header variations
  */
 function determineCategory(record) {
     // Try multiple header variations
@@ -177,15 +125,17 @@ function determineCategory(record) {
     const credit = parseFloat((record.credit || record.Credit || record.cr || record.Cr || '0')
                    .toString().replace(/[₹,\s]/g, '')) || 0;
     
-    // Rest of the categorization logic remains the same
+    // 1. PayIN
     if (voucherType === "Bank Receipts") {
         return CATEGORIES.PAYIN;
     }
     
+    // 2. PayOut
     if (voucherType === "Bank Payments") {
         return CATEGORIES.PAYOUT;
     }
     
+    // Journal Entry patterns
     if (voucherType === "Journal Entry") {
         if (particulars.includes("dp charges")) return CATEGORIES.DP_CHARGES;
         if (particulars.includes("amc for")) return CATEGORIES.AMC_CHARGES;
@@ -194,14 +144,13 @@ function determineCategory(record) {
         if (particulars.includes("delayed payment")) return CATEGORIES.DELAYED_PAYMENT;
         if (particulars.includes("payment gateway charges")) return CATEGORIES.GATEWAY_CHARGES;
         
+        // Other entries
         if (debit > 0) return CATEGORIES.OTHER_DEBIT;
         if (credit > 0) return CATEGORIES.OTHER_CREDIT;
     }
     
     return CATEGORIES.UNCATEGORIZED;
 }
-
-
 
 /**
  * Update all results displays
@@ -462,41 +411,4 @@ function formatNumber(num) {
     }).format(num);
 }
 
-/**
- * Keyboard shortcuts handler
- */
-document.addEventListener('keydown', function(event) {
-    // Only trigger if ledger section is active
-    const ledgerSection = document.getElementById('ledgerrecon-section');
-    if (!ledgerSection || ledgerSection.style.display === 'none') return;
-    
-    if (event.ctrlKey) {
-        switch(event.key.toLowerCase()) {
-            case 'u':
-                event.preventDefault();
-                document.getElementById('csvFileInput').click();
-                break;
-            case 'p':
-                event.preventDefault();
-                processCsv();
-                break;
-            case 'e':
-                event.preventDefault();
-                if (!document.getElementById('exportBtn').disabled) {
-                    exportResults();
-                }
-                break;
-            case 'r':
-                event.preventDefault();
-                resetLedgerRecon();
-                break;
-        }
-    }
-});
 
-/**
- * Initialize the application
- */
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Ledger Reconciliation Tool initialized');
-});
