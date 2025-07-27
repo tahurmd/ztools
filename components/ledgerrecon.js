@@ -121,23 +121,33 @@ function parseCSV(csvText) {
 /**
  * Process CSV and categorize data
  */
-function processCsv() {
-    if (csvData.length === 0) {
-        alert('Please upload a CSV file first');
-        return;
+function parseCSV(csvText) {
+    const lines = csvText.split('\n').filter(line => line.trim());
+    if (lines.length === 0) return [];
+    
+    const headers = lines[0].split(',').map(h => h.trim().replace(/['"]/g, ''));
+    const data = [];
+    
+    for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(',');
+        const row = {};
+        headers.forEach((header, index) => {
+            row[header] = values[index] ? values[index].trim().replace(/['"]/g, '') : '';
+        });
+        
+        // Check for both possible header names for particulars
+        const particulars = row.particulars || row.Particulars || row['particulars'] || row['Particulars'] || '';
+        
+        if (particulars && 
+            !particulars.toLowerCase().includes('opening balance') && 
+            !particulars.toLowerCase().includes('closing balance')) {
+            data.push(row);
+        }
     }
     
-    categorizedData = csvData.map((record, index) => ({
-        ...record,
-        category: determineCategory(record),
-        serialNumber: index + 1
-    }));
-    
-    filteredData = [...categorizedData];
-    
-    updateResults();
-    document.getElementById('exportBtn').disabled = false;
+    return data;
 }
+
 
 /**
  * Determine category based on voucher type and particulars
