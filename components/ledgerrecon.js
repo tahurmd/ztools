@@ -143,22 +143,21 @@ function processCsv() {
  * Determine category based on voucher type and particulars
  */
 function determineCategory(record) {
-    const voucherType = (record.voucher_type || '').trim();
-    const particulars = (record.particulars || '').trim().toLowerCase();
-    const debit = parseFloat((record.debit || '0').toString().replace(/[₹,\s]/g, '')) || 0;
-    const credit = parseFloat((record.credit || '0').toString().replace(/[₹,\s]/g, '')) || 0;
+    // Make header access case-insensitive
+    const voucherType = (record['voucher_type'] || record['Voucher Type'] || '').trim();
+    const particulars = (record['particulars'] || record['Particulars'] || '').trim().toLowerCase();
+    const debit = parseFloat((record.debit || record.Debit || '0').toString().replace(/[₹,\s]/g, '')) || 0;
+    const credit = parseFloat((record.credit || record.Credit || '0').toString().replace(/[₹,\s]/g, '')) || 0;
     
-    // 1. PayIN
+    // Rest of the function remains the same
     if (voucherType === "Bank Receipts") {
         return CATEGORIES.PAYIN;
     }
     
-    // 2. PayOut
     if (voucherType === "Bank Payments") {
         return CATEGORIES.PAYOUT;
     }
     
-    // Journal Entry patterns
     if (voucherType === "Journal Entry") {
         if (particulars.includes("dp charges")) return CATEGORIES.DP_CHARGES;
         if (particulars.includes("amc for")) return CATEGORIES.AMC_CHARGES;
@@ -167,13 +166,13 @@ function determineCategory(record) {
         if (particulars.includes("delayed payment")) return CATEGORIES.DELAYED_PAYMENT;
         if (particulars.includes("payment gateway charges")) return CATEGORIES.GATEWAY_CHARGES;
         
-        // Other entries
         if (debit > 0) return CATEGORIES.OTHER_DEBIT;
         if (credit > 0) return CATEGORIES.OTHER_CREDIT;
     }
     
     return CATEGORIES.UNCATEGORIZED;
 }
+
 
 /**
  * Update all results displays
