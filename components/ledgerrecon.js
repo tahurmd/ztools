@@ -131,12 +131,21 @@ function parseCSV(csvText) {
     for (let i = 1; i < lines.length; i++) {
         const values = lines[i].split(',');
         const row = {};
+        
+        // Create row with original headers
         headers.forEach((header, index) => {
             row[header] = values[index] ? values[index].trim().replace(/['"]/g, '') : '';
         });
         
-        // Check for both possible header names for particulars
-        const particulars = row.particulars || row.Particulars || row['particulars'] || row['Particulars'] || '';
+        // Create normalized versions for easier access
+        headers.forEach((header, index) => {
+            const normalizedHeader = header.toLowerCase().replace(/\s+/g, '_');
+            row[normalizedHeader] = values[index] ? values[index].trim().replace(/['"]/g, '') : '';
+        });
+        
+        // Check for particulars field (try all possible variations)
+        const particulars = row.particulars || row.Particulars || row['particulars'] || row['Particulars'] || 
+                           row.particular || row.Particular || '';
         
         if (particulars && 
             !particulars.toLowerCase().includes('opening balance') && 
@@ -145,21 +154,30 @@ function parseCSV(csvText) {
         }
     }
     
+    console.log('Parsed CSV data:', data.length, 'records'); // Debug line
     return data;
 }
+
 
 
 /**
  * Determine category based on voucher type and particulars
  */
 function determineCategory(record) {
-    // Make header access case-insensitive
-    const voucherType = (record['voucher_type'] || record['Voucher Type'] || '').trim();
-    const particulars = (record['particulars'] || record['Particulars'] || '').trim().toLowerCase();
-    const debit = parseFloat((record.debit || record.Debit || '0').toString().replace(/[₹,\s]/g, '')) || 0;
-    const credit = parseFloat((record.credit || record.Credit || '0').toString().replace(/[₹,\s]/g, '')) || 0;
+    // Try multiple header variations
+    const voucherType = (record['voucher_type'] || record['Voucher Type'] || 
+                        record['voucher type'] || record['VOUCHER_TYPE'] || '').trim();
     
-    // Rest of the function remains the same
+    const particulars = (record['particulars'] || record['Particulars'] || 
+                        record['particular'] || record['Particular'] || '').trim().toLowerCase();
+    
+    const debit = parseFloat((record.debit || record.Debit || record.dr || record.Dr || '0')
+                  .toString().replace(/[₹,\s]/g, '')) || 0;
+    
+    const credit = parseFloat((record.credit || record.Credit || record.cr || record.Cr || '0')
+                   .toString().replace(/[₹,\s]/g, '')) || 0;
+    
+    // Rest of the categorization logic remains the same
     if (voucherType === "Bank Receipts") {
         return CATEGORIES.PAYIN;
     }
@@ -182,6 +200,7 @@ function determineCategory(record) {
     
     return CATEGORIES.UNCATEGORIZED;
 }
+
 
 
 /**
