@@ -1493,7 +1493,7 @@ style="position: sticky; top: 0; z-index: 1000; margin-bottom: 0;">
                                     <button class="btn btn-light btn-sm px-3" onclick="resetLedgerRecon()">
                                         <i class="bi bi-arrow-clockwise me-1"></i>Reset
                                     </button>
-                                    <button class="btn btn-light btn-sm px-3" onclick="exportResults()" disabled id="exportBtn">
+                                    <button class="btn btn-light btn-sm px-3" onclick="exportLedgerSummary()" disabled id="exportBtn">
                                         <i class="bi bi-download me-1"></i>Export
                                     </button>
                                 </div>
@@ -1565,13 +1565,13 @@ style="position: sticky; top: 0; z-index: 1000; margin-bottom: 0;">
                                         <div class="col-12">
                                             <div class="border rounded-3 p-3 bg-success text-white text-center">
                                                 <div class="fs-4 fw-bold" id="totalInflow">₹0</div>
-                                                <small class="opacity-75">Total Inflow</small>
+                                                <small class="opacity-75">Total Funds Used:</small>
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <div class="border rounded-3 p-3 bg-primary text-white text-center">
                                                 <div class="fs-4 fw-bold" id="categorizedCount">0</div>
-                                                <small class="opacity-75">Categorized Records</small>
+                                                <small class="opacity-75">Total Charges:</small>
                                             </div>
                                         </div>
                                     </div>

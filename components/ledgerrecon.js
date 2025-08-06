@@ -173,11 +173,18 @@ function updateResults() {
 /**
  * Generate summary table - excludes uncategorized and total outflow
  */
+/**
+ * Generate summary table - Updated with Total Funds Used and Combined Charges
+ */
+/**
+ * Generate summary table - Updated with new Key Metrics
+ */
 function generateSummary() {
     const summary = {};
     Object.values(CATEGORIES).forEach(cat => summary[cat] = 0);
     
     let totalInflow = 0;
+    let totalOutflow = 0;
     let categorizedCount = 0;
     
     categorizedData.forEach(record => {
@@ -195,11 +202,26 @@ function generateSummary() {
             totalInflow += amount;
         } else if (category !== CATEGORIES.UNCATEGORIZED) {
             amount = debit > 0 ? debit : credit;
+            if (category === CATEGORIES.PAYOUT) {
+                totalOutflow += amount;
+            }
         }
         
         summary[category] += amount;
         if (category !== CATEGORIES.UNCATEGORIZED) categorizedCount++;
     });
+    
+    // Calculate combined charges
+    const totalCharges = summary[CATEGORIES.DP_CHARGES] + 
+                        summary[CATEGORIES.AMC_CHARGES] + 
+                        summary[CATEGORIES.MODIFICATION_CHARGES] + 
+                        summary[CATEGORIES.SECONDARY_ORDER] + 
+                        summary[CATEGORIES.DELAYED_PAYMENT] + 
+                        summary[CATEGORIES.GATEWAY_CHARGES] + 
+                        summary[CATEGORIES.OTHER_DEBIT];
+    
+    // Calculate total funds used (PayIn - PayOut)
+    const totalFundsUsed = totalInflow - totalOutflow;
     
     // Update summary table - EXCLUDE UNCATEGORIZED
     const summaryTable = document.getElementById('summaryTable');
@@ -219,10 +241,12 @@ function generateSummary() {
         }
     });
     
-    // Update statistics - ONLY TOTAL INFLOW AND CATEGORIZED COUNT
-    document.getElementById('totalInflow').textContent = `₹${formatNumber(totalInflow)}`;
-    document.getElementById('categorizedCount').textContent = categorizedCount;
+    // Update Key Metrics - Replace with new metrics
+    document.getElementById('totalInflow').textContent = `₹${formatNumber(Math.abs(totalFundsUsed))}`;
+    document.getElementById('categorizedCount').textContent = `₹${formatNumber(totalCharges)}`;
 }
+
+
 
 /**
  * Display detailed records table - Updated to handle all header variations
@@ -375,12 +399,14 @@ function resetLedgerRecon() {
 /**
  * Export only summary report (not full transactions) - Updated to handle header variations
  */
-function exportResults() {
+// Renamed function:
+function exportLedgerSummary() {
     if (categorizedData.length === 0) {
         alert('No data to export. Please process a CSV file first.');
         return;
     }
     
+    // ... rest of the function stays exactly the same
     // Generate summary data (excluding uncategorized)
     const summary = {};
     Object.values(CATEGORIES).forEach(cat => summary[cat] = 0);
@@ -429,6 +455,7 @@ function exportResults() {
     
     console.log('Summary export completed successfully');
 }
+
 
 /**
  * View individual record details - Updated to handle all header variations
@@ -486,7 +513,7 @@ document.addEventListener('keydown', function(event) {
             case 'e':
                 event.preventDefault();
                 if (!document.getElementById('exportBtn').disabled) {
-                    exportResults();
+                    exportLedgerSummary();
                 }
                 break;
             case 'r':
