@@ -1,15 +1,17 @@
 // =============================================================================
-// RSS FEED WITH PARSER PACKAGE AND TAB NOTIFICATIONS
+// RSS FEED WITH PARSER PACKAGE AND TAB NOTIFICATIONS - REDESIGNED
 // =============================================================================
 // This module creates a responsive RSS feed reader that:
 // 1. Fetches RSS feeds from 3 Zerodha sources using RSS Parser package
 // 2. Displays content in a tabbed interface with Bootstrap styling
-// 3. Sends notifications when new content is available (even in different tabs)
+// 3. Sends notifications only for posts that arrive after the page is opened
 // 4. Auto-refreshes every 5 minutes to check for updates
+// 5. Uses Cloudflare Worker for reliable CORS handling
+// 6. Features notification controls and timestamp in the header
 // =============================================================================
 
 // =============================================================================
-// GLOBAL VARIABLES & STATE MANAGEMENT
+/* GLOBAL VARIABLES & STATE MANAGEMENT */
 // =============================================================================
 
 // Main data storage for all RSS items from all feeds
@@ -18,7 +20,7 @@ let allRssItems = [];
 // Auto-refresh timer reference for cleanup
 let autoRefreshInterval;
 
-// Track last seen content to detect new items (persisted in localStorage)
+// Track last seen content to detect across-page sessions (kept but not used for notifications)
 let lastSeenTimestamp = localStorage.getItem('lastRSSUpdate') || 0;
 
 // Store original page title to restore after notifications
@@ -27,8 +29,11 @@ let originalTitle = document.title;
 // Track if current tab is visible (for cross-tab notification logic)
 let isPageVisible = true;
 
+// New: watermark for current session; only notify for items newer than this
+let sessionStartTimestamp = 0;
+
 // =============================================================================
-// RSS PARSER CONFIGURATION
+/* RSS PARSER CONFIGURATION */
 // =============================================================================
 
 // Initialize RSS Parser with browser headers to avoid CORS issues
@@ -39,20 +44,19 @@ const parser = new RSSParser({
 });
 
 // =============================================================================
-// FEED CONFIGURATION
+/* FEED CONFIGURATION */
 // =============================================================================
 
-// Define the 3 Zerodha RSS feeds with their display properties
 const FEEDS = {
     bulletins: {
         url: 'https://zerodha.com/marketintel/bulletin/?format=xml',
-        label: 'Bulletins',           // Display name
-        icon: 'bi-megaphone',         // Bootstrap icon class
-        color: 'success'              // Bootstrap color theme
+        label: 'Bulletins',
+        icon: 'bi-megaphone',
+        color: 'success'
     },
     disclosures: {
         url: 'https://zerodha.com/marketintel/disclosures/?format=xml',
-        label: 'Disclosures', 
+        label: 'Disclosures',
         icon: 'bi-file-earmark-text',
         color: 'primary'
     },
@@ -65,140 +69,122 @@ const FEEDS = {
 };
 
 // =============================================================================
-// MAIN INITIALIZATION FUNCTION
+/* MAIN INITIALIZATION FUNCTION */
 // =============================================================================
 
-// Entry point - called when DOM is ready
 function initRSSFeed() {
-    // Step 1: Request browser notification permission
     requestNotificationPermission();
-    
-    // Step 2: Setup tab visibility detection for cross-tab notifications
     setupPageVisibilityHandling();
-    
-    // Step 3: Create the HTML layout structure
     createLayout();
-    
-    // Step 4: Load RSS feeds from all sources
     loadFeeds();
-    
-    // Step 5: Start auto-refresh timer
     startAutoRefresh();
 }
 
 // =============================================================================
-// NOTIFICATION PERMISSION MANAGEMENT
+/* NOTIFICATION PERMISSION MANAGEMENT */
 // =============================================================================
 
-// Request permission for browser notifications (required for cross-tab alerts)
 async function requestNotificationPermission() {
-    // Check if browser supports notifications and permission is not set
-    if ('Notification' in window && Notification.permission === 'default') {
-        // Ask user for permission
-        const permission = await Notification.requestPermission();
-        
-        // Update UI to reflect permission status
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'default') {
+        try {
+            await Notification.requestPermission();
+        } catch (_) {}
         updateNotificationStatus();
-        
-        console.log('Notification permission:', permission);
     }
 }
 
 // =============================================================================
-// TAB VISIBILITY DETECTION
+/* TAB VISIBILITY DETECTION */
 // =============================================================================
 
-// Setup listener to detect when user switches tabs (for cross-tab notifications)
 function setupPageVisibilityHandling() {
     document.addEventListener('visibilitychange', () => {
-        // Update visibility state based on document.hidden API
         isPageVisible = !document.hidden;
-        
-        // When user returns to tab, clear any notification indicators
         if (isPageVisible) {
-            // Restore original page title (remove notification count)
             document.title = originalTitle;
         }
     });
 }
 
 // =============================================================================
-// HTML LAYOUT CREATION
+/* HTML LAYOUT CREATION - REDESIGNED WITH HEADER CONTROLS */
 // =============================================================================
 
-// Create the entire RSS feed interface using Bootstrap components
 function createLayout() {
-    // Get the container element from the main page
-    const container = document.getElementById('quick-links-container');
+    const container = document.getElementById('rssfeeds-section');
     if (!container) return;
 
-    // Build the complete HTML structure
     container.innerHTML = `
         <div class="col-12">
             <div class="card border-0 shadow-sm">
-                
-                <!-- =============================================================
-                     HEADER SECTION - Title, count, refresh button
-                     ============================================================= -->
+                <!-- HEADER WITH NOTIFICATION BUTTON AND TIMESTAMP -->
                 <div class="card-header bg-secondary text-white py-4">
                     <div class="d-flex justify-content-between align-items-center">
                         <!-- Left side: Title and description -->
                         <div>
                             <h4 class="mb-1">
-                                <i class="bi bi-rss fs-3 me-3"></i>Zerodha Market Intel
+                                <i class="bi bi-rss fs-3 me-3"></i>Zerodha Updates
                             </h4>
                             <p class="mb-0 opacity-75">Latest 10 updates from each category</p>
                         </div>
                         
-                        <!-- Right side: Status badges and refresh button -->
-                        <div class="d-flex align-items-center gap-3">
+                        <!-- Right side: Controls moved from footer to header -->
+                        <div class="d-flex align-items-center gap-4">
+                            <!-- Status indicators -->
                             <div class="d-flex align-items-center gap-2">
-                                <!-- Total item count badge -->
                                 <span class="badge bg-light text-primary fw-bold" id="total-count">0 items</span>
-                                <!-- New items indicator badge (hidden by default) -->
                                 <span class="badge bg-warning text-dark d-none" id="new-badge">NEW</span>
                             </div>
-                            <!-- Manual refresh button -->
-                            <button class="btn btn-light btn-sm px-3" onclick="refreshFeeds()">
+                            
+                            <!-- Last updated timestamp -->
+                            <div class="text-light opacity-75">
+                                <i class="bi bi-clock me-1"></i>
+                                <span id="last-updated" class="small">Never updated</span>
+                            </div>
+                            
+                            <!-- Notification toggle -->
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="notificationToggle" 
+                                       onchange="toggleNotifications()" checked>
+                                <label class="form-check-label small text-light" for="notificationToggle">
+                                    <i class="bi bi-bell me-1"></i>
+                                    <span id="notification-status">Notifications</span>
+                                </label>
+                            </div>
+                            
+                            <!-- Refresh button -->
+                            <button class="btn btn-light btn-sm px-3" onclick="refreshFeeds(this)">
                                 <i class="bi bi-arrow-clockwise me-1"></i>Refresh
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- =============================================================
-                     CATEGORY NAVIGATION TABS
-                     ============================================================= -->
                 <div class="card-body p-0">
+                    <!-- CATEGORY NAVIGATION TABS -->
                     <nav class="nav nav-tabs nav-fill border-bottom-0" id="category-tabs">
-                        <!-- All Updates tab (default active) -->
-                        <button class="nav-link active fw-semibold" onclick="showCategory('all')">
+                        <button class="nav-link active fw-semibold" onclick="showCategory(this, 'all')">
                             <i class="bi bi-grid me-2"></i>All Updates 
                             <span class="badge bg-secondary ms-2" id="count-all">0</span>
                         </button>
-                        <!-- Bulletins tab -->
-                        <button class="nav-link fw-semibold" onclick="showCategory('bulletins')">
+                        <button class="nav-link fw-semibold" onclick="showCategory(this, 'bulletins')">
                             <i class="bi bi-megaphone me-2"></i>Bulletins 
                             <span class="badge bg-success ms-2" id="count-bulletins">0</span>
                         </button>
-                        <!-- Disclosures tab -->
-                        <button class="nav-link fw-semibold" onclick="showCategory('disclosures')">
+                        <button class="nav-link fw-semibold" onclick="showCategory(this, 'disclosures')">
                             <i class="bi bi-file-earmark-text me-2"></i>Disclosures 
                             <span class="badge bg-primary ms-2" id="count-disclosures">0</span>
                         </button>
-                        <!-- Circulars tab -->
-                        <button class="nav-link fw-semibold" onclick="showCategory('circulars')">
+                        <button class="nav-link fw-semibold" onclick="showCategory(this, 'circulars')">
                             <i class="bi bi-file-text me-2"></i>Circulars 
                             <span class="badge bg-warning ms-2" id="count-circulars">0</span>
                         </button>
                     </nav>
 
-                    <!-- =============================================================
-                         MAIN CONTENT AREA - Where RSS items are displayed
-                         ============================================================= -->
+                    <!-- MAIN CONTENT AREA -->
                     <div class="p-4" style="min-height: 500px; max-height: 700px; overflow-y: auto;">
                         <div id="feed-content">
-                            <!-- Initial loading state -->
                             <div class="text-center py-5">
                                 <div class="spinner-border text-primary mb-3" role="status"></div>
                                 <p class="text-muted">Loading latest market intel...</p>
@@ -206,33 +192,12 @@ function createLayout() {
                         </div>
                     </div>
 
-                    <!-- =============================================================
-                         FOOTER - Last updated time and notification controls
-                         ============================================================= -->
+                    <!-- SIMPLIFIED FOOTER -->
                     <div class="card-footer bg-light">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <!-- Left side: Last updated timestamp -->
-                            <small class="text-muted">
-                                <i class="bi bi-clock me-1"></i>
-                                <span id="last-updated">Never updated</span>
+                        <div class="text-center">
+                            <small class="text-success">
+                                <i class="bi bi-arrow-clockwise me-1"></i>Auto-refresh: ON (every 5 minutes)
                             </small>
-                            
-                            <!-- Right side: Notification toggle and auto-refresh status -->
-                            <div class="d-flex align-items-center gap-3">
-                                <!-- Notification enable/disable toggle switch -->
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="notificationToggle" 
-                                           onchange="toggleNotifications()" checked>
-                                    <label class="form-check-label small" for="notificationToggle">
-                                        <i class="bi bi-bell me-1"></i>
-                                        <span id="notification-status">Notifications</span>
-                                    </label>
-                                </div>
-                                <!-- Auto-refresh status indicator -->
-                                <small class="text-success">
-                                    <i class="bi bi-arrow-clockwise me-1"></i>Auto-refresh: ON
-                                </small>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -240,20 +205,18 @@ function createLayout() {
         </div>
     `;
     
-    // Initialize notification status display
     updateNotificationStatus();
 }
 
 // =============================================================================
-// RSS FEED LOADING & PARSING
+/* RSS FEED LOADING & PARSING - FIXED FOR CLOUDFLARE WORKER */
 // =============================================================================
 
-// Main function to load and parse all RSS feeds
 async function loadFeeds() {
     const contentDiv = document.getElementById('feed-content');
-    
+    if (!contentDiv) return;
+
     try {
-        // Step 1: Show loading spinner while fetching feeds
         contentDiv.innerHTML = `
             <div class="text-center py-5">
                 <div class="spinner-border text-primary mb-3" role="status"></div>
@@ -261,64 +224,87 @@ async function loadFeeds() {
             </div>
         `;
 
-        // Step 2: Create promises for all 3 feeds (parallel loading for better performance)
         const feedPromises = Object.entries(FEEDS).map(async ([category, config]) => {
             try {
-                // Use CORS proxy to bypass cross-origin restrictions
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(config.url)}`;
-                const response = await fetch(proxyUrl);
-                const data = await response.json();
+                // Using YOUR Cloudflare Worker - FIXED: Direct XML response
+                const proxyUrl = `https://ztool-cors-header-proxy.mdtahur23.workers.dev/?url=${encodeURIComponent(config.url)}`;
+                const response = await fetch(proxyUrl, { cache: 'no-store' });
+                if (!response.ok) throw new Error(`Proxy error ${response.status}`);
                 
-                // Check if proxy returned RSS content
-                if (data.contents) {
-                    // Parse RSS XML using RSS Parser library
-                    const feed = await parser.parseString(data.contents);
-                    
-                    // Transform feed items into our standard format, limit to 10 latest items
-                    return feed.items.slice(0, 10).map(item => ({
-                        title: item.title || 'No title',
-                        link: item.link || '#',
-                        pubDate: item.pubDate || item.isoDate || new Date().toISOString(),
-                        description: item.contentSnippet || item.content || '',
-                        category: category,
-                        categoryLabel: config.label,
-                        categoryIcon: config.icon,
-                        categoryColor: config.color,
-                        // Convert date to timestamp for easy sorting
-                        timestamp: new Date(item.pubDate || item.isoDate || Date.now()).getTime()
-                    }));
+                // FIXED: Use .text() for XML content from your worker (not .json())
+                const xmlText = await response.text();
+                if (!xmlText || xmlText.trim() === '' || !xmlText.includes('<')) {
+                    throw new Error('Invalid or empty XML response');
                 }
-                return [];
+
+                const feed = await parser.parseString(xmlText);
+
+                return feed.items.slice(0, 10).map(item => ({
+                    id: item.guid || item.link || `${(item.title || '').slice(0,200)}|${item.pubDate || item.isoDate || ''}`,
+                    title: item.title || 'No title',
+                    link: item.link || '#',
+                    pubDate: item.pubDate || item.isoDate || new Date().toISOString(),
+                    description: item.contentSnippet || item.content || '',
+                    category: category,
+                    categoryLabel: config.label,
+                    categoryIcon: config.icon,
+                    categoryColor: config.color,
+                    timestamp: new Date(item.pubDate || item.isoDate || Date.now()).getTime()
+                }));
             } catch (error) {
-                // Log individual feed errors but don't break the entire process
                 console.warn(`Failed to load ${category}:`, error);
                 return [];
             }
         });
 
-        // Step 3: Wait for all feeds to complete loading
         const results = await Promise.all(feedPromises);
-        
-        // Step 4: Store previous items to detect new content
-        const previousItems = [...allRssItems];
-        
-        // Step 5: Combine all feeds and sort by date (newest first)
-        allRssItems = results
-            .flat()                                    // Combine all arrays into one
-            .sort((a, b) => b.timestamp - a.timestamp); // Sort by timestamp descending
-        
-        // Step 6: Update UI with new data
-        updateCounts();           // Update category count badges
-        displayContent('all');    // Show all items by default
-        updateLastUpdated();      // Update "last updated" timestamp
-        
-        // Step 7: Check for new items and send notifications (only after first load)
-        if (previousItems.length > 0) {
-            checkForNewItems(previousItems);
+
+        // Combine and sort
+        allRssItems = results.flat().sort((a, b) => b.timestamp - a.timestamp);
+
+        // Update UI
+        updateCounts();
+        displayContent('all');
+        updateLastUpdated();
+
+        // Compute latest timestamp in current data
+        const latestTs = allRssItems.length ? Math.max(...allRssItems.map(i => i.timestamp)) : 0;
+
+        // If first successful load this session, set the watermark and do not notify
+        const isFirstLoadThisSession = sessionStartTimestamp === 0;
+        if (isFirstLoadThisSession) {
+            sessionStartTimestamp = latestTs;
+            if (latestTs) localStorage.setItem('lastRSSUpdate', String(latestTs));
+            return;
         }
-        
+
+        // Subsequent loads: notify only for items newer than the session watermark
+        const newItemsSinceOpen = allRssItems.filter(i => i.timestamp > sessionStartTimestamp);
+
+        if (newItemsSinceOpen.length > 0) {
+            const badge = document.getElementById('new-badge');
+            if (badge) {
+                badge.classList.remove('d-none');
+                setTimeout(() => badge.classList.add('d-none'), 10000);
+            }
+
+            const toggle = document.getElementById('notificationToggle');
+            if (toggle?.checked) {
+                sendBrowserNotification(newItemsSinceOpen);
+            }
+
+            if (!isPageVisible) {
+                updatePageTitle(newItemsSinceOpen.length);
+            }
+
+            showToastNotification(newItemsSinceOpen);
+
+            // Advance watermark so we don't notify again for the same items
+            sessionStartTimestamp = latestTs;
+            if (latestTs) localStorage.setItem('lastRSSUpdate', String(latestTs));
+        }
+
     } catch (error) {
-        // Handle complete failure to load any feeds
         console.error('Error loading feeds:', error);
         contentDiv.innerHTML = `
             <div class="text-center py-5">
@@ -334,116 +320,71 @@ async function loadFeeds() {
 }
 
 // =============================================================================
-// NEW CONTENT DETECTION & NOTIFICATION SYSTEM
+/* BROWSER NOTIFICATION (CROSS-TAB) - FIXED */
 // =============================================================================
 
-// Compare current items with previous load to detect new content
-function checkForNewItems(previousItems) {
-    if (!allRssItems.length) return;
-    
-    // Create a set of previous timestamps for fast lookup
-    const previousTimestamps = new Set(previousItems.map(item => item.timestamp));
-    
-    // Find items that weren't in the previous load (new items)
-    const newItems = allRssItems.filter(item => !previousTimestamps.has(item.timestamp));
-    
-    // If new items found, trigger all notification methods
-    if (newItems.length > 0) {
-        // Step 1: Show visual "NEW" badge in header
-        const badge = document.getElementById('new-badge');
-        if (badge) {
-            badge.classList.remove('d-none');
-            // Auto-hide badge after 10 seconds
-            setTimeout(() => badge.classList.add('d-none'), 10000);
-        }
-        
-        // Step 2: Send browser notification (if user enabled notifications)
-        if (document.getElementById('notificationToggle')?.checked) {
-            sendBrowserNotification(newItems);
-        }
-        
-        // Step 3: Update page title with count (if user is on different tab)
-        if (!isPageVisible) {
-            updatePageTitle(newItems.length);
-        }
-        
-        // Step 4: Show toast notification (visible when user returns to tab)
-        showToastNotification(newItems);
-        
-        // Step 5: Update localStorage to remember we've seen these items
-        const latestTimestamp = Math.max(...allRssItems.map(item => item.timestamp));
-        localStorage.setItem('lastRSSUpdate', latestTimestamp.toString());
-    }
-}
-
-// =============================================================================
-// BROWSER NOTIFICATION (CROSS-TAB)
-// =============================================================================
-
-// Send system notification that appears even when user is on different tab
 function sendBrowserNotification(newItems) {
-    // Check if user granted notification permission
+    if (!('Notification' in window)) return;
     if (Notification.permission !== 'granted') return;
-    
+
     const count = newItems.length;
-    const latestItem = newItems[0];
-    
-    // Create system notification
+    const latestItem = newItems[0]; // FIXED: get the first item
+
     const notification = new Notification('📈 Zerodha Market Intel Update', {
         body: count === 1 
             ? `${latestItem.categoryLabel}: ${latestItem.title.substring(0, 100)}...`
             : `${count} new updates available`,
-        icon: '/favicon.ico',        // App icon
-        badge: '/favicon.ico',       // Small badge icon
-        tag: 'zerodha-update',       // Prevents multiple identical notifications
-        requireInteraction: false,  // Auto-closes
-        silent: false               // Plays notification sound
+        icon: '/favicon.ico',
+        badge: '/favicon.ico',
+        tag: 'zerodha-update',
+        requireInteraction: false,
+        silent: false
     });
-    
-    // Handle notification click - bring user back to the feed
+
     notification.onclick = function() {
-        window.focus();              // Focus the browser window
-        notification.close();       // Close the notification
-        
-        // If all new items are from same category, switch to that tab
+        try { window.focus(); } catch(_) {}
+        notification.close();
         const categories = [...new Set(newItems.map(item => item.category))];
         if (categories.length === 1) {
-            showCategory(categories[0]);
+            const tabBtn = document.querySelector(`.nav-link[onclick*="'${categories[0]}'"]`);
+            if (tabBtn) showCategory(tabBtn, categories[0]); // FIXED: pass the category string
         }
     };
-    
-    // Auto-close notification after 8 seconds
+
     setTimeout(() => notification.close(), 8000);
 }
 
 // =============================================================================
-// PAGE TITLE NOTIFICATION (TAB INDICATOR)
+/* PAGE TITLE NOTIFICATION (TAB INDICATOR) */
 // =============================================================================
 
-// Update browser tab title to show new item count
 function updatePageTitle(newCount) {
     document.title = `(${newCount}) New Updates - ${originalTitle}`;
 }
 
 // =============================================================================
-// TOAST NOTIFICATION (IN-PAGE)
+/* TOAST NOTIFICATION (IN-PAGE) - FIXED */
 // =============================================================================
 
-// Show Bootstrap toast notification (only visible when on the tab)
 function showToastNotification(newItems) {
+    // Handle multiple categories case - FIXED
+    const categories = [...new Set(newItems.map(item => item.categoryLabel))];
+    const categoryText = categories.length === 1 
+        ? categories[0] 
+        : `${categories.length} categories`;
+
     const toastHtml = `
-        <div class="toast align-items-center text-white bg-success border-0" role="alert">
+        <div class="toast align-items-center text-white bg-success border-0" role="alert" data-bs-autohide="true" data-bs-delay="6000">
             <div class="d-flex">
                 <div class="toast-body">
                     <strong>📈 New Market Intel!</strong><br>
-                    <small>${newItems.length} new update${newItems.length > 1 ? 's' : ''} from ${newItems[0].categoryLabel}</small>
+                    <small>${newItems.length} new update${newItems.length > 1 ? 's' : ''} from ${categoryText}</small>
                 </div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
             </div>
         </div>
     `;
     
-    // Create toast container if it doesn't exist
     let toastContainer = document.getElementById('toast-container');
     if (!toastContainer) {
         toastContainer = document.createElement('div');
@@ -453,77 +394,84 @@ function showToastNotification(newItems) {
         document.body.appendChild(toastContainer);
     }
     
-    // Show the toast
-    toastContainer.innerHTML = toastHtml;
-    const toast = new bootstrap.Toast(toastContainer.querySelector('.toast'));
-    toast.show();
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = toastHtml.trim();
+    const toastEl = wrapper.firstElementChild;
+    toastContainer.appendChild(toastEl);
+
+    if (window.bootstrap?.Toast) {
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    } else {
+        toastEl.style.display = 'block';
+        setTimeout(() => toastEl.remove(), 6000);
+    }
 }
 
 // =============================================================================
-// NOTIFICATION TOGGLE MANAGEMENT
+/* NOTIFICATION TOGGLE MANAGEMENT */
 // =============================================================================
 
-// Handle notification enable/disable toggle
 function toggleNotifications() {
     const toggle = document.getElementById('notificationToggle');
-    const status = document.getElementById('notification-status');
-    
+    if (!('Notification' in window)) {
+        toggle.checked = false;
+        updateNotificationStatus();
+        return;
+    }
+
     if (toggle.checked) {
-        // User wants to enable notifications
         if (Notification.permission === 'default') {
-            // Permission not yet requested - ask for it
             Notification.requestPermission().then(permission => {
                 if (permission !== 'granted') {
-                    // Permission denied - uncheck the toggle
                     toggle.checked = false;
                 }
                 updateNotificationStatus();
             });
         } else if (Notification.permission === 'denied') {
-            // Permission previously denied - show help message
             alert('Notifications are blocked. Please enable them in your browser settings.');
             toggle.checked = false;
+            updateNotificationStatus();
+        } else {
+            updateNotificationStatus();
         }
+    } else {
+        updateNotificationStatus();
     }
-    
-    // Update the status display
-    updateNotificationStatus();
 }
 
-// Update notification status text and styling based on permission state
 function updateNotificationStatus() {
     const toggle = document.getElementById('notificationToggle');
     const status = document.getElementById('notification-status');
-    
     if (!toggle || !status) return;
-    
+
+    if (!('Notification' in window)) {
+        status.innerHTML = '<i class="bi bi-bell-slash me-1"></i>Notifications Unsupported';
+        status.className = 'small text-light opacity-75';
+        return;
+    }
+
     const permission = Notification.permission;
     const isEnabled = toggle.checked;
-    
-    // Update display based on permission and toggle state
+
     if (permission === 'granted' && isEnabled) {
-        // Notifications enabled and working
         status.innerHTML = '<i class="bi bi-bell-fill me-1"></i>Notifications ON';
-        status.className = 'form-check-label small text-success';
+        status.className = 'small text-light';
     } else if (permission === 'denied') {
-        // Notifications blocked by browser
         status.innerHTML = '<i class="bi bi-bell-slash me-1"></i>Notifications Blocked';
-        status.className = 'form-check-label small text-danger';
+        status.className = 'small text-warning';
         toggle.checked = false;
     } else {
-        // Notifications disabled or permission not granted
         status.innerHTML = '<i class="bi bi-bell me-1"></i>Notifications OFF';
-        status.className = 'form-check-label small text-muted';
+        status.className = 'small text-light opacity-75';
     }
 }
 
 // =============================================================================
-// CATEGORY COUNT MANAGEMENT
+/* CATEGORY COUNT MANAGEMENT */
 // =============================================================================
 
-// Update the count badges in category tabs
 function updateCounts() {
-    // Calculate counts for each category
     const counts = {
         all: allRssItems.length,
         bulletins: allRssItems.filter(item => item.category === 'bulletins').length,
@@ -531,30 +479,27 @@ function updateCounts() {
         circulars: allRssItems.filter(item => item.category === 'circulars').length
     };
     
-    // Update each count badge in the UI
     Object.entries(counts).forEach(([category, count]) => {
         const element = document.getElementById(`count-${category}`);
         if (element) element.textContent = count;
     });
     
-    // Update total count in header
-    document.getElementById('total-count').textContent = `${counts.all} items`;
+    const total = document.getElementById('total-count');
+    if (total) total.textContent = `${counts.all} items`;
 }
 
 // =============================================================================
-// CONTENT DISPLAY & FILTERING
+/* CONTENT DISPLAY & FILTERING - REDESIGNED CARDS */
 // =============================================================================
 
-// Display RSS items based on selected category filter
 function displayContent(category) {
     const contentDiv = document.getElementById('feed-content');
+    if (!contentDiv) return;
+
+    const itemsToShow = category === 'all' 
+        ? allRssItems
+        : allRssItems.filter(item => item.category === category);
     
-    // Filter items based on selected category
-    let itemsToShow = category === 'all' 
-        ? allRssItems                                              // Show all items
-        : allRssItems.filter(item => item.category === category);  // Show only selected category
-    
-    // Handle empty state
     if (itemsToShow.length === 0) {
         contentDiv.innerHTML = `
             <div class="text-center py-5">
@@ -566,109 +511,131 @@ function displayContent(category) {
         return;
     }
     
-    // Generate HTML for each RSS item
     const now = new Date();
-    const itemsHtml = itemsToShow.map((item, index) => {
+    const itemsHtml = itemsToShow.map(item => {
         const pubDate = new Date(item.pubDate);
         const isToday = pubDate.toDateString() === now.toDateString();
         const timeAgo = getTimeAgo(pubDate);
         
-        // Create card for each RSS item
         return `
-            <div class="border rounded-3 p-3 mb-3 bg-white shadow-sm hover-shadow">
-                <!-- Item header: category badge and date info -->
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                    <!-- Category badge with icon -->
-                    <span class="badge bg-${item.categoryColor} px-3 py-2">
-                        <i class="${item.categoryIcon} me-1"></i>${item.categoryLabel}
-                    </span>
-                    <!-- Date and time information -->
-                    <div class="text-end">
-                        <small class="text-muted d-block">${pubDate.toLocaleDateString('en-IN')}</small>
-                        <small class="text-info">${timeAgo}</small>
-                        ${isToday ? '<span class="badge bg-danger ms-2">Today</span>' : ''}
+            <div class="card mb-4 border-0 shadow-sm position-relative overflow-hidden" style="transition: all 0.3s ease; border-left: 4px solid var(--bs-${item.categoryColor}) !important;">
+                
+                <!-- TOP BAR: Category badge, timestamp and today indicator -->
+                <div class="card-header bg-light border-0 py-2 px-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-${item.categoryColor} bg-opacity-10 text-${item.categoryColor} border border-${item.categoryColor} border-opacity-25 px-3 py-2 fw-semibold">
+                            <i class="${item.categoryIcon} me-2"></i>${item.categoryLabel}
+                        </span>
+                        <div class="d-flex align-items-center gap-2">
+                            <small class="text-muted fw-medium">
+                                <i class="bi bi-clock me-1"></i>${timeAgo}
+                            </small>
+                            ${isToday ? '<span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-1"><i class="bi bi-calendar-check me-1"></i>Today</span>' : ''}
+                        </div>
                     </div>
                 </div>
-                
-                <!-- Item title (clickable link) -->
-                <h6 class="mb-2">
-                    <a href="${item.link}" target="_blank" class="text-decoration-none text-dark fw-semibold">
-                        ${item.title}
-                    </a>
-                </h6>
-                
-                <!-- Item description (truncated) -->
-                ${item.description ? `
-                    <p class="text-muted small mb-2 lh-sm">
-                        ${item.description.substring(0, 200)}${item.description.length > 200 ? '...' : ''}
-                    </p>
-                ` : ''}
-                
-                <!-- Item footer: full date and read more button -->
-                <div class="d-flex justify-content-between align-items-center">
-                    <!-- Full publication date and time -->
-                    <small class="text-muted">
-                        <i class="bi bi-calendar3 me-1"></i>
-                        ${pubDate.toLocaleString('en-IN', {
-                            day: '2-digit',
-                            month: 'short',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        })}
-                    </small>
-                    <!-- Read more button -->
-                    <a href="${item.link}" target="_blank" class="btn btn-outline-${item.categoryColor} btn-sm">
-                        <i class="bi bi-arrow-right me-1"></i>Read More
-                    </a>
+
+                <!-- MAIN CONTENT -->
+                <div class="card-body px-3 py-3">
+                    
+                    <!-- Title with better typography -->
+                    <h5 class="card-title mb-3 fw-bold lh-base">
+                        <a href="${item.link}" target="_blank" class="text-decoration-none text-dark stretched-link position-relative" style="z-index: 2;">
+                            ${item.title}
+                        </a>
+                    </h5>
+                    
+                    <!-- Description with improved styling -->
+                    ${item.description ? `
+                        <p class="card-text text-muted mb-3 lh-sm" style="font-size: 0.95rem;">
+                            ${item.description.substring(0, 180)}${item.description.length > 180 ? '...' : ''}
+                        </p>
+                    ` : ''}
+                    
+                    <!-- Bottom section: Full date and action button -->
+                    <div class="d-flex justify-content-between align-items-center pt-2 border-top border-light">
+                        <div class="d-flex flex-column">
+                            <small class="text-muted fw-medium">
+                                <i class="bi bi-calendar3 me-1 text-${item.categoryColor}"></i>
+                                ${pubDate.toLocaleDateString('en-IN', {
+                                    day: '2-digit',
+                                    month: 'short',
+                                    year: 'numeric'
+                                })}
+                            </small>
+                            <small class="text-muted" style="font-size: 0.8rem;">
+                                ${pubDate.toLocaleTimeString('en-IN', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}
+                            </small>
+                        </div>
+                        <a href="${item.link}" target="_blank" class="btn btn-${item.categoryColor} btn-sm px-3 py-2 position-relative" style="z-index: 3;">
+                            <i class="bi bi-arrow-right me-1"></i>Read More
+                        </a>
+                    </div>
                 </div>
+
+                <!-- Subtle hover effect overlay -->
+                <div class="position-absolute top-0 start-0 w-100 h-100 bg-${item.categoryColor} bg-opacity-5 opacity-0" style="transition: opacity 0.3s ease; pointer-events: none;" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='0'"></div>
             </div>
         `;
     }).join('');
     
-    // Update the content area with generated HTML
     contentDiv.innerHTML = itemsHtml;
+    
+    // Add hover effects to cards
+    addCardHoverEffects();
+}
+
+// Add interactive hover effects to cards
+function addCardHoverEffects() {
+    const cards = document.querySelectorAll('#feed-content .card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 0.5rem 1rem rgba(0, 0, 0, 0.15)';
+            const overlay = this.querySelector('.position-absolute');
+            if (overlay) overlay.style.opacity = '1';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)';
+            const overlay = this.querySelector('.position-absolute');
+            if (overlay) overlay.style.opacity = '0';
+        });
+    });
 }
 
 // =============================================================================
-// CATEGORY TAB NAVIGATION
+/* CATEGORY TAB NAVIGATION */
 // =============================================================================
 
-// Handle category tab clicks to filter content
-function showCategory(category) {
-    // Remove active class from all tabs
+function showCategory(el, category) {
     document.querySelectorAll('.nav-link').forEach(tab => {
         tab.classList.remove('active');
     });
-    
-    // Add active class to clicked tab
-    event.target.classList.add('active');
-    
-    // Display filtered content
+    if (el && el.classList) el.classList.add('active');
     displayContent(category);
 }
 
 // =============================================================================
-// UTILITY FUNCTIONS
+/* UTILITY FUNCTIONS */
 // =============================================================================
 
-// Convert date to human-readable "time ago" format
 function getTimeAgo(date) {
     const now = new Date();
     const diffInMinutes = Math.floor((now - date) / (1000 * 60));
-    
-    // Return appropriate time format based on age
     if (diffInMinutes < 1) return 'Just now';
     if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-    
     const diffInHours = Math.floor(diffInMinutes / 60);
     if (diffInHours < 24) return `${diffInHours}h ago`;
-    
     const diffInDays = Math.floor(diffInHours / 24);
     if (diffInDays === 1) return 'Yesterday';
     return `${diffInDays}d ago`;
 }
 
-// Update "last updated" timestamp in footer
 function updateLastUpdated() {
     const element = document.getElementById('last-updated');
     if (element) {
@@ -680,54 +647,43 @@ function updateLastUpdated() {
 }
 
 // =============================================================================
-// MANUAL REFRESH FUNCTION
+/* MANUAL REFRESH FUNCTION */
 // =============================================================================
 
-// Handle manual refresh button click
-async function refreshFeeds() {
-    const refreshBtn = event.target;
+async function refreshFeeds(btn) {
+    const refreshBtn = btn;
     const originalHtml = refreshBtn.innerHTML;
-    
-    // Show loading state on button
     refreshBtn.innerHTML = '<i class="bi bi-arrow-clockwise spinner-border spinner-border-sm me-1"></i>Updating...';
     refreshBtn.disabled = true;
-    
-    // Reload feeds
     await loadFeeds();
-    
-    // Restore button to normal state
     refreshBtn.innerHTML = originalHtml;
     refreshBtn.disabled = false;
 }
 
 // =============================================================================
-// AUTO-REFRESH SYSTEM
+/* AUTO-REFRESH SYSTEM */
 // =============================================================================
 
-// Start automatic refresh timer (runs every 5 minutes)
 function startAutoRefresh() {
     autoRefreshInterval = setInterval(() => {
-        loadFeeds();  // Automatically reload feeds
-    }, 5 * 60 * 1000); // 5 minutes in milliseconds
+        loadFeeds();
+    }, 5 * 60 * 1000);
 }
 
 // =============================================================================
-// GLOBAL FUNCTION EXPORTS (for onclick handlers)
+/* GLOBAL FUNCTION EXPORTS (for onclick handlers) */
 // =============================================================================
 
-// Make functions available globally for HTML onclick attributes
 window.showCategory = showCategory;
 window.refreshFeeds = refreshFeeds;
 window.toggleNotifications = toggleNotifications;
 
 // =============================================================================
-// INITIALIZATION & CLEANUP
+/* INITIALIZATION & CLEANUP */
 // =============================================================================
 
-// Initialize when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', initRSSFeed);
 
-// Cleanup auto-refresh timer when page is closed
 window.addEventListener('beforeunload', () => {
     if (autoRefreshInterval) {
         clearInterval(autoRefreshInterval);

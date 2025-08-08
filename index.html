@@ -39,19 +39,19 @@
         
         <!-- Navigation Menu -->
         <ul class="nav flex-column">
-           <!-- Quick Links -->
+           <!-- Quick Links
             <li class="nav-item">
                 <a class="nav-link active" href="#" data-section="quicklinks">
                     <i class="bi bi bi-link-45deg""></i>
                     <span>Quick Links</span>
                 </a>
-            </li>
+            </li> -->
             
 
 
             <!-- rss feeds -->
             <li class="nav-item">
-                <a class="nav-link " href="#" data-section="rssfeeds">
+                <a class="nav-link active " href="#" data-section="rssfeeds">
                     <i class="bi bi bi-rss""></i>
                     <span>Rss Feeds</span>
                 </a>
@@ -132,7 +132,7 @@
         
         <!-- ==================== QUICK LINKS SECTION ==================== -->
 
-        <section id="quicklinks-section" class="content-section"">
+        <section id="quicklinks-section" class="content-section" style="display: none;">
             <div class="col-12">
                 <div class="card border-0 shadow-sm">
                     <!-- Header -->
@@ -407,7 +407,7 @@
 
 
 
-        <section id="rssfeeds-section" class="content-section" style="display: none;">
+        <section id="rssfeeds-section" class="content-section" ">
             <div class="row"><div class="col-12">
               <div class="card"><div class="card-body">
                 <div class="row" id="quick-links-container"></div>
@@ -427,7 +427,10 @@
                                 <h4 class="mb-1">
                                     <i class="bi bi-filetype-csv fs-3 me-3"></i>CSV Column Comparator
                                 </h4>
-                                <p class="mb-0 opacity-75">Compare columns between two CSV files to find unique and common values</p>
+                                <p class="mb-0 text-white-90 small lh-base">
+                                    <i class="bi bi-info-circle-fill me-2 text-warning"></i>
+                                    <strong>Instructions:</strong> Upload holding files from CONSOLE & KITE • For Console: select "Trading Symbol" column • For Kite: select "Instrument Name" column •
+                                </p>
                             </div>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="d-flex align-items-center gap-2">
@@ -440,7 +443,7 @@
                             </div>
                         </div>
                     </div>
-        
+                    
                     <!-- Main Content -->
                     <div class="card-body p-0">
                         
